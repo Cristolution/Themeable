@@ -1,8 +1,52 @@
+import { useTheme } from './state/useTheme'
+import { Nav } from './components/dashboard/Nav'
+import { Sidebar } from './components/dashboard/Sidebar'
+
 export default function App() {
+  const { theme, dirty, save, reset } = useTheme()
+
+  const handleExport = () => {
+    const blob = new Blob([JSON.stringify(theme, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `theme-${theme.name.toLowerCase().replace(/\s+/g, '-')}.json`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  const handleImport = () => {
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.accept = 'application/json,.json'
+    input.onchange = () => {
+      const file = input.files?.[0]
+      if (!file) return
+      // Wired up properly in Task 20.
+      alert(`Import wired up properly later; got ${file.name}`)
+    }
+    input.click()
+  }
+
   return (
-    <div style={{ padding: '24px', fontFamily: 'system-ui' }}>
-      <h1>Themeable Dashboard</h1>
-      <p>Scaffold OK.</p>
+    <div className="app-shell">
+      <Nav
+        themeName={theme.name}
+        dirty={dirty}
+        onSave={save}
+        onExport={handleExport}
+        onImport={handleImport}
+        onReset={reset}
+      />
+      <div className="app-body">
+        <Sidebar />
+        <main className="app-main">
+          <h2>Welcome</h2>
+          <p style={{ color: 'var(--color-text-muted)' }}>
+            Dashboard content goes here.
+          </p>
+        </main>
+      </div>
     </div>
   )
 }
