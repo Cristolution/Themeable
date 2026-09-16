@@ -1,6 +1,8 @@
 import { useTheme } from './state/useTheme'
 import { Nav } from './components/dashboard/Nav'
 import { Sidebar } from './components/dashboard/Sidebar'
+import { kpis } from './dashboard/sampleData'
+import { StatCard } from './components/dashboard/StatCard'
 
 export default function App() {
   const { theme, dirty, save, reset } = useTheme()
@@ -41,10 +43,10 @@ export default function App() {
       <div className="app-body">
         <Sidebar />
         <main className="app-main">
-          <h2>Welcome</h2>
-          <p style={{ color: 'var(--color-text-muted)' }}>
-            Dashboard content goes here.
-          </p>
+          <h2 style={{ marginBottom: 'var(--space-lg)' }}>Overview</h2>
+          <div className="kpi-grid">
+            {kpis.map(k => <StatCard key={k.id} {...k} />)}
+          </div>
         </main>
       </div>
     </div>
