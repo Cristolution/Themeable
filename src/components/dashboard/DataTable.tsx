@@ -12,6 +12,13 @@ const statusToTone = {
   archived: 'neutral'
 } as const
 
+const columns: { key: SortKey; label: string }[] = [
+  { key: 'name', label: 'Name' },
+  { key: 'status', label: 'Status' },
+  { key: 'owner', label: 'Owner' },
+  { key: 'updated', label: 'Updated' }
+]
+
 export function DataTable({ rows, title = 'Recent Projects' }: { rows: TableRow[]; title?: string }) {
   const [sortKey, setSortKey] = useState<SortKey>('updated')
   const [sortDir, setSortDir] = useState<SortDir>('desc')
@@ -34,16 +41,29 @@ export function DataTable({ rows, title = 'Recent Projects' }: { rows: TableRow[
 
   const arrow = (key: SortKey) => (sortKey === key ? (sortDir === 'asc' ? ' ↑' : ' ↓') : '')
 
+  const ariaSortFor = (key: SortKey): 'ascending' | 'descending' | 'none' => {
+    if (sortKey !== key) return 'none'
+    return sortDir === 'asc' ? 'ascending' : 'descending'
+  }
+
   return (
     <Card title={title}>
       <div className="table-wrap">
         <table className="data-table">
           <thead>
             <tr>
-              <th onClick={() => handleSort('name')} className="data-table__th--sortable">Name{arrow('name')}</th>
-              <th onClick={() => handleSort('status')} className="data-table__th--sortable">Status{arrow('status')}</th>
-              <th onClick={() => handleSort('owner')} className="data-table__th--sortable">Owner{arrow('owner')}</th>
-              <th onClick={() => handleSort('updated')} className="data-table__th--sortable">Updated{arrow('updated')}</th>
+              {columns.map(col => (
+                <th key={col.key} aria-sort={ariaSortFor(col.key)} className="data-table__th--sortable">
+                  <button
+                    type="button"
+                    className="data-table__sort-button"
+                    onClick={() => handleSort(col.key)}
+                    aria-label={`Sort by ${col.label}${sortKey === col.key ? `, currently ${sortDir === 'asc' ? 'ascending' : 'descending'}` : ''}`}
+                  >
+                    {col.label}{arrow(col.key)}
+                  </button>
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
