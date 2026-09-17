@@ -38,8 +38,19 @@ export function validateTheme(input: unknown): Result {
     errors.push('colors must be an object')
   } else {
     for (const [k, v] of Object.entries(input.colors)) {
-      if (typeof v !== 'string' || (!HEX_RE.test(v) && !RGBA_RE.test(v))) {
-        errors.push(`colors.${k} must be a hex color (got ${JSON.stringify(v)})`)
+      if (typeof v !== 'string') {
+        errors.push(`colors.${k} must be a string (got ${JSON.stringify(v)})`)
+        continue
+      }
+      if (k === 'overlay') {
+        // overlay accepts hex OR rgba/rgb (for alpha transparency)
+        if (!HEX_RE.test(v) && !RGBA_RE.test(v) && !/^rgb\(/.test(v)) {
+          errors.push(`colors.${k} must be a hex color or rgba/rgb value (got ${JSON.stringify(v)})`)
+        }
+      } else {
+        if (!HEX_RE.test(v)) {
+          errors.push(`colors.${k} must be a hex color (got ${JSON.stringify(v)})`)
+        }
       }
     }
     const requiredColors = ['bg', 'bgElevated', 'bgSubtle', 'text', 'textMuted', 'border', 'accent', 'accentText', 'success', 'warning', 'danger', 'bgHover', 'bgActive', 'textInverse', 'borderStrong', 'focusRing', 'info', 'link', 'codeBg', 'overlay']

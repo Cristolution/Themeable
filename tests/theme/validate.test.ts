@@ -11,7 +11,7 @@ const validTheme: Theme = {
     success: '#00cc66', warning: '#ffaa00', danger: '#ff3333',
     bgHover: '#1a1a1a', bgActive: '#2a2a2a', textInverse: '#ffffff',
     borderStrong: '#444444', focusRing: '#0066ff', info: '#00aaff',
-    link: '#0066ff', codeBg: '#0a0a0a', overlay: 'rgba(0,0,0,0.5)' as Theme['colors']['overlay']
+    link: '#0066ff', codeBg: '#0a0a0a', overlay: 'rgba(0,0,0,0.5)'
   },
   typography: {
     fontFamily: { body: 'sans-serif', heading: 'sans-serif', mono: 'monospace' },

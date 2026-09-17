@@ -23,7 +23,7 @@ export type ColorTokens = {
   info: HexColor
   link: HexColor
   codeBg: HexColor
-  overlay: HexColor
+  overlay: `#${string}` | `rgba(${string})` | `rgb(${string})`
 }
 
 export type TypographyTokens = {
