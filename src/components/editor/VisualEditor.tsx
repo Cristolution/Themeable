@@ -1,4 +1,7 @@
 import type { Theme } from '../../theme/schema'
+import { LengthInput } from '../ui/LengthInput'
+import { SizePreview } from '../ui/SizePreview'
+import { FontPicker } from '../ui/FontPicker'
 
 type Props = {
   theme: Theme
@@ -54,11 +57,38 @@ export function VisualEditor({ theme, onChange }: Props) {
   const updateTransition = (key: keyof Theme['transitions'], value: string) =>
     update(t => ({ ...t, transitions: { ...t.transitions, [key]: value } }))
 
+  const updateDirection = (value: Theme['direction']) =>
+    update(t => ({ ...t, direction: value }))
+
   return (
     <div className="visual-editor">
       <section className="ve-section">
         <h4 className="ve-section__title">Name</h4>
         <input className="field__input" value={theme.name} onChange={e => update(t => setKey(t, 'name', e.target.value))} />
+      </section>
+
+      <section className="ve-section">
+        <h4 className="ve-section__title">Direction</h4>
+        <div className="ve-direction-toggle" role="radiogroup" aria-label="Text direction">
+          <button
+            type="button"
+            role="radio"
+            aria-checked={theme.direction === 'ltr'}
+            className={`ve-direction-toggle__btn${theme.direction === 'ltr' ? ' is-active' : ''}`}
+            onClick={() => updateDirection('ltr')}
+          >
+            LTR
+          </button>
+          <button
+            type="button"
+            role="radio"
+            aria-checked={theme.direction === 'rtl'}
+            className={`ve-direction-toggle__btn${theme.direction === 'rtl' ? ' is-active' : ''}`}
+            onClick={() => updateDirection('rtl')}
+          >
+            RTL
+          </button>
+        </div>
       </section>
 
       <section className="ve-section">
@@ -118,23 +148,30 @@ export function VisualEditor({ theme, onChange }: Props) {
       <section className="ve-section">
         <h4 className="ve-section__title">Typography — font families</h4>
         <div className="ve-stack">
-          {Object.entries(theme.typography.fontFamily).map(([k, v]) => (
-            <label key={k} className="ve-field">
+          {(Object.keys(theme.typography.fontFamily) as Array<keyof Theme['typography']['fontFamily']>).map(k => (
+            <div key={k} className="ve-length-row">
               <span className="ve-field__label">{k}</span>
-              <input className="field__input" value={v} onChange={e => updateFontFamily(k as keyof Theme['typography']['fontFamily'], e.target.value)} />
-            </label>
+              <FontPicker
+                value={theme.typography.fontFamily[k]}
+                onChange={newV => updateFontFamily(k, newV)}
+              />
+            </div>
           ))}
         </div>
       </section>
 
       <section className="ve-section">
         <h4 className="ve-section__title">Typography — sizes</h4>
-        <div className="ve-grid">
-          {Object.entries(theme.typography.fontSize).map(([k, v]) => (
-            <label key={k} className="ve-field">
+        <div className="ve-stack">
+          {(Object.keys(theme.typography.fontSize) as Array<keyof Theme['typography']['fontSize']>).map(k => (
+            <div key={k} className="ve-length-row">
               <span className="ve-field__label">{k}</span>
-              <input className="field__input" value={v} onChange={e => updateFontSize(k as keyof Theme['typography']['fontSize'], e.target.value)} />
-            </label>
+              <LengthInput
+                value={theme.typography.fontSize[k]}
+                onChange={newV => updateFontSize(k, newV)}
+              />
+              <SizePreview kind="fontSize" value={theme.typography.fontSize[k]} />
+            </div>
           ))}
         </div>
       </section>
@@ -167,24 +204,32 @@ export function VisualEditor({ theme, onChange }: Props) {
 
       <section className="ve-section">
         <h4 className="ve-section__title">Spacing</h4>
-        <div className="ve-grid">
-          {Object.entries(theme.spacing).map(([k, v]) => (
-            <label key={k} className="ve-field">
+        <div className="ve-stack">
+          {(Object.keys(theme.spacing) as Array<keyof Theme['spacing']>).map(k => (
+            <div key={k} className="ve-length-row">
               <span className="ve-field__label">{k}</span>
-              <input className="field__input" value={v} onChange={e => updateSpacing(k as keyof Theme['spacing'], e.target.value)} />
-            </label>
+              <LengthInput
+                value={theme.spacing[k]}
+                onChange={newV => updateSpacing(k, newV)}
+              />
+              <SizePreview kind="spacing" value={theme.spacing[k]} />
+            </div>
           ))}
         </div>
       </section>
 
       <section className="ve-section">
         <h4 className="ve-section__title">Radius</h4>
-        <div className="ve-grid">
-          {Object.entries(theme.radius).map(([k, v]) => (
-            <label key={k} className="ve-field">
+        <div className="ve-stack">
+          {(Object.keys(theme.radius) as Array<keyof Theme['radius']>).map(k => (
+            <div key={k} className="ve-length-row">
               <span className="ve-field__label">{k}</span>
-              <input className="field__input" value={v} onChange={e => updateRadius(k as keyof Theme['radius'], e.target.value)} />
-            </label>
+              <LengthInput
+                value={theme.radius[k]}
+                onChange={newV => updateRadius(k, newV)}
+              />
+              <SizePreview kind="radius" value={theme.radius[k]} />
+            </div>
           ))}
         </div>
       </section>
@@ -233,11 +278,15 @@ export function VisualEditor({ theme, onChange }: Props) {
 
       <section className="ve-section">
         <h4 className="ve-section__title">Borders</h4>
-        <div className="ve-grid">
-          <label className="ve-field">
+        <div className="ve-stack">
+          <div className="ve-length-row">
             <span className="ve-field__label">width</span>
-            <input className="field__input" value={theme.borders.width} onChange={e => updateBorders('width', e.target.value)} />
-          </label>
+            <LengthInput
+              value={theme.borders.width}
+              onChange={v => updateBorders('width', v)}
+            />
+            <SizePreview kind="spacing" value={theme.borders.width} />
+          </div>
           <label className="ve-field">
             <span className="ve-field__label">style</span>
             <select className="field__input" value={theme.borders.style} onChange={e => updateBorders('style', e.target.value)}>

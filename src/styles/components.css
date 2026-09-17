@@ -1003,3 +1003,53 @@
   border-bottom: var(--border-width) var(--border-style) var(--color-border);
   overflow-x: auto;
 }
+
+/* ===== Length row (Task 10) ===== */
+
+.ve-length-row {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  align-items: end;
+  gap: var(--space-sm);
+  padding: var(--space-sm) 0;
+  border-bottom: var(--border-width) var(--border-style) var(--color-border);
+}
+
+/* ===== Direction toggle (Task 11) ===== */
+
+.ve-direction-toggle {
+  display: inline-flex;
+  gap: var(--space-xs);
+  padding: var(--space-xs);
+  background: var(--color-bg-subtle);
+  border: var(--border-width) var(--border-style) var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.ve-direction-toggle__btn {
+  background: transparent;
+  color: var(--color-text-muted);
+  border: none;
+  padding: var(--space-xs) var(--space-md);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.ve-direction-toggle__btn:hover:not(.is-active) {
+  background: var(--color-bg-hover);
+  color: var(--color-text);
+}
+
+.ve-direction-toggle__btn.is-active {
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+}
+
+.ve-direction-toggle__btn:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
