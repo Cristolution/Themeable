@@ -317,3 +317,35 @@
 .activity__line { font-size: var(--font-size-sm); line-height: var(--line-height-normal); }
 .activity__line em { color: var(--color-text-muted); font-style: normal; }
 .activity__when { font-size: var(--font-size-xs); color: var(--color-text-muted); margin-top: 2px; }
+
+/* ===== CalendarWidget ===== */
+
+.calendar { display: flex; flex-direction: column; gap: var(--space-sm); }
+.calendar__weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-medium);
+}
+.calendar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--space-xs);
+}
+.calendar__cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+}
+.calendar__cell--empty { visibility: hidden; }
+.calendar__cell--today {
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+  font-weight: var(--font-weight-bold);
+}

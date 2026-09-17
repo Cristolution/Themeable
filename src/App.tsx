@@ -8,6 +8,7 @@ import { BarChartCard } from './components/dashboard/BarChartCard'
 import { DataTable } from './components/dashboard/DataTable'
 import { FormCard } from './components/dashboard/FormCard'
 import { ActivityFeed } from './components/dashboard/ActivityFeed'
+import { CalendarWidget } from './components/dashboard/CalendarWidget'
 
 export default function App() {
   const { theme, dirty, save, reset } = useTheme()
@@ -62,6 +63,10 @@ export default function App() {
           <div style={{ marginTop: 'var(--space-lg)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-md)' }}>
             <FormCard />
             <ActivityFeed entries={activity} />
+          </div>
+          <div style={{ marginTop: 'var(--space-lg)', display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 'var(--space-md)' }}>
+            <CalendarWidget />
+            <div>Features placeholder</div>
           </div>
         </main>
       </div>
