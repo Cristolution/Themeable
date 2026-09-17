@@ -116,4 +116,5 @@ export type Theme = {
   breakpoints: BreakpointTokens
   customCss: string
   direction: Direction
+  nightMode: boolean
 }
