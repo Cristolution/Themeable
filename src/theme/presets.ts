@@ -41,7 +41,8 @@ export const midnight: Theme = {
   borders: { width: '1px', style: 'solid' },
   transitions: { fast: '120ms ease', normal: '200ms ease', slow: '400ms ease' },
   customCss: '',
-  direction: 'ltr' as const
+  direction: 'ltr' as const,
+  nightMode: false as const
 }
 
 export const solarizedLight: Theme = {
@@ -83,7 +84,8 @@ export const solarizedLight: Theme = {
   borders: { width: '1px', style: 'solid' },
   transitions: { fast: '120ms ease', normal: '200ms ease', slow: '400ms ease' },
   customCss: '',
-  direction: 'ltr' as const
+  direction: 'ltr' as const,
+  nightMode: false as const
 }
 
 export const monokai: Theme = {
@@ -125,7 +127,8 @@ export const monokai: Theme = {
   borders: { width: '1px', style: 'solid' },
   transitions: { fast: '100ms linear', normal: '180ms linear', slow: '350ms linear' },
   customCss: '',
-  direction: 'ltr' as const
+  direction: 'ltr' as const,
+  nightMode: false as const
 }
 
 export const paper: Theme = {
@@ -167,7 +170,8 @@ export const paper: Theme = {
   borders: { width: '1px', style: 'solid' },
   transitions: { fast: '120ms ease', normal: '200ms ease', slow: '400ms ease' },
   customCss: '',
-  direction: 'ltr' as const
+  direction: 'ltr' as const,
+  nightMode: false as const
 }
 
 export const presets: Theme[] = [midnight, solarizedLight, monokai, paper]

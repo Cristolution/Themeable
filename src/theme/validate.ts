@@ -23,7 +23,7 @@ function ok(theme: Theme): Result {
 export function validateTheme(input: unknown): Result {
   if (!isObject(input)) return fail(['theme must be an object'])
 
-  const requiredTop = ['name', 'colors', 'typography', 'spacing', 'radius', 'shadows', 'borders', 'transitions', 'breakpoints', 'customCss', 'direction']
+  const requiredTop = ['name', 'colors', 'typography', 'spacing', 'radius', 'shadows', 'borders', 'transitions', 'breakpoints', 'customCss', 'direction', 'nightMode']
   const errors: string[] = []
   for (const key of requiredTop) {
     if (!(key in input)) errors.push(`missing top-level key: ${key}`)
@@ -34,6 +34,9 @@ export function validateTheme(input: unknown): Result {
   if (typeof input.customCss !== 'string') errors.push('customCss must be a string')
   if (input.direction !== 'ltr' && input.direction !== 'rtl') {
     errors.push(`direction must be 'ltr' or 'rtl' (got ${JSON.stringify(input.direction)})`)
+  }
+  if (typeof input.nightMode !== 'boolean') {
+    errors.push(`nightMode must be a boolean (got ${JSON.stringify(input.nightMode)})`)
   }
 
   // colors

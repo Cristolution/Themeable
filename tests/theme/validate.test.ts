@@ -34,7 +34,8 @@ const validTheme: Theme = {
   transitions: { fast: '120ms ease', normal: '200ms ease', slow: '400ms ease' },
   breakpoints: { sm: '640px', md: '768px', lg: '1024px', xl: '1280px', '2xl': '1536px' },
   customCss: '',
-  direction: 'ltr' as const
+  direction: 'ltr' as const,
+  nightMode: false as const
 }
 
 describe('validateTheme', () => {
@@ -135,6 +136,15 @@ describe('validateTheme', () => {
     expect(result.ok).toBe(false)
     if (!result.ok) {
       expect(result.errors.some(e => e.includes('direction'))).toBe(true)
+    }
+  })
+
+  it('rejects theme with bad nightMode', () => {
+    const bad = { ...validTheme, nightMode: 'yes' as unknown as Theme['nightMode'] }
+    const result = validateTheme(bad)
+    expect(result.ok).toBe(false)
+    if (!result.ok) {
+      expect(result.errors.some(e => e.includes('nightMode'))).toBe(true)
     }
   })
 
