@@ -11,6 +11,7 @@ import { ActivityFeed } from './components/dashboard/ActivityFeed'
 import { CalendarWidget } from './components/dashboard/CalendarWidget'
 import { FeatureCards } from './components/dashboard/FeatureCards'
 import { EditorPanel } from './components/editor/EditorPanel'
+import { JsonEditor } from './components/editor/JsonEditor'
 
 export default function App() {
   const { theme, setTheme, dirty, save, reset } = useTheme()
@@ -71,7 +72,7 @@ export default function App() {
             <FeatureCards features={featureCards} />
           </div>
         </main>
-        <EditorPanel theme={theme} onChange={setTheme} />
+        <EditorPanel theme={theme} onChange={setTheme} jsonSlot={<JsonEditor theme={theme} onChange={setTheme} />} />
       </div>
     </div>
   )
