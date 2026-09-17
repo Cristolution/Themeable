@@ -31,11 +31,15 @@ code, pre {
   font-size: var(--font-size-sm);
 }
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: var(--color-bg); }
-::-webkit-scrollbar-thumb {
+/* Scrollbar (Webkit + Firefox) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) var(--color-bg);
+}
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-track { background: var(--color-bg); }
+*::-webkit-scrollbar-thumb {
   background: var(--color-border);
   border-radius: var(--radius-sm);
 }
-::-webkit-scrollbar-thumb:hover { background: var(--color-text-muted); }
+*::-webkit-scrollbar-thumb:hover { background: var(--color-text-muted); }

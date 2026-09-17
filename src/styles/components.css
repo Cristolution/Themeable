@@ -656,3 +656,68 @@
 }
 .settings-tab:hover { color: var(--color-text); }
 .settings-tab--active { color: var(--color-accent); border-bottom-color: var(--color-accent); }
+
+/* ===== Responsive layout (sm/md/lg breakpoints) ===== */
+
+/* Mobile-first defaults — already set in component CSS */
+
+/* Tablet (≥ 768px) */
+@media (min-width: 768px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .chart-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* Desktop (≥ 1024px) */
+@media (min-width: 1024px) {
+  .kpi-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* Responsive app shell */
+@media (max-width: 1023px) {
+  .app-body--narrow { flex-direction: column; position: relative; }
+  .app-body--narrow .app-main { width: 100%; }
+  .app-body--narrow .sidebar {
+    width: 100%;
+    border-inline-end: none;
+    border-bottom: var(--border-width) var(--border-style) var(--color-border);
+    flex-direction: row;
+    overflow-x: auto;
+    gap: var(--space-md);
+  }
+  .app-body--narrow .sidebar__section { flex-shrink: 0; }
+
+  .editor-sheet {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+  }
+  .editor-sheet .editor-panel { width: 100%; border-inline-start: none; }
+
+  .editor-toggle {
+    position: fixed;
+    bottom: var(--space-lg);
+    inset-inline-end: var(--space-lg);
+    background: var(--color-accent);
+    color: var(--color-accent-text);
+    border: none;
+    border-radius: var(--radius-full);
+    padding: var(--space-md) var(--space-lg);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    box-shadow: var(--shadow-lg);
+    cursor: pointer;
+    z-index: 101;
+  }
+
+  /* Nav collapse at narrow */
+  .nav__links--desktop { display: none; }
+  .nav__hamburger { display: inline-flex; }
+}
+
+/* Below tablet (xs) */
+@media (max-width: 767px) {
+  .kpi-grid { grid-template-columns: 1fr; }
+  .chart-grid { grid-template-columns: 1fr; }
+  .features-grid { grid-template-columns: 1fr; }
+}
