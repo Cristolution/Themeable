@@ -6,6 +6,7 @@ import { StatCard } from './components/dashboard/StatCard'
 import { LineChartCard } from './components/dashboard/LineChartCard'
 import { BarChartCard } from './components/dashboard/BarChartCard'
 import { DataTable } from './components/dashboard/DataTable'
+import { FormCard } from './components/dashboard/FormCard'
 
 export default function App() {
   const { theme, dirty, save, reset } = useTheme()
@@ -56,6 +57,10 @@ export default function App() {
           </div>
           <div style={{ marginTop: 'var(--space-lg)' }}>
             <DataTable rows={tableRows} />
+          </div>
+          <div style={{ marginTop: 'var(--space-lg)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-md)' }}>
+            <FormCard />
+            <div>Activity placeholder</div>
           </div>
         </main>
       </div>

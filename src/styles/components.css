@@ -283,3 +283,17 @@
 }
 .data-table tbody tr:hover { background: var(--color-bg-subtle); }
 .data-table__muted { color: var(--color-text-muted); }
+
+/* ===== FormCard ===== */
+
+.form { display: flex; flex-direction: column; gap: var(--space-md); }
+.form__checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+.form__checkbox input { accent-color: var(--color-accent); }
+.form__actions { display: flex; gap: var(--space-sm); justify-content: flex-end; }
