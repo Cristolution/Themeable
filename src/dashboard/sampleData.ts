@@ -48,3 +48,20 @@ export const tableRows: TableRow[] = [
   { id: '4', name: 'Deprecated payment gateway', status: 'archived', owner: 'Mia Chen',    updated: 'Last week' },
   { id: '5', name: 'Customer support migration', status: 'pending',  owner: 'Sam Patel',   updated: 'Last week' }
 ]
+
+export type ActivityEntry = {
+  id: string
+  who: string
+  action: string
+  target: string
+  when: string
+  tone: 'success' | 'warning' | 'danger' | 'neutral'
+}
+
+export const activity: ActivityEntry[] = [
+  { id: '1', who: 'Alex Kim',    action: 'completed',  target: 'Onboarding flow redesign',   when: '2 hours ago', tone: 'success' },
+  { id: '2', who: 'Priya Shah',  action: 'commented',  target: 'Q4 marketing campaign',      when: '4 hours ago', tone: 'neutral' },
+  { id: '3', who: 'Diego Lopez', action: 'flagged',    target: 'Mobile app performance',     when: 'Yesterday',   tone: 'warning' },
+  { id: '4', who: 'Mia Chen',    action: 'archived',   target: 'Deprecated payment gateway', when: '2 days ago',  tone: 'neutral' },
+  { id: '5', who: 'Sam Patel',   action: 'failed',     target: 'Deploy pipeline',            when: '3 days ago',  tone: 'danger' }
+]
