@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTheme } from './state/useTheme'
 import { validateTheme } from './theme/validate'
 import { presets } from './theme/presets'
@@ -22,6 +22,16 @@ import { kpis, lineData, barData, tableRows, activity, featureCards } from './da
 export default function App() {
   const { theme, setTheme, dirty, save, reset } = useTheme()
   const [toast, setToast] = useState<{ message: string; tone: 'error' | 'success' } | null>(null)
+
+  useEffect(() => {
+    if (!dirty) return
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault()
+      e.returnValue = ''
+    }
+    window.addEventListener('beforeunload', handler)
+    return () => window.removeEventListener('beforeunload', handler)
+  }, [dirty])
 
   const handleExport = () => {
     const blob = new Blob([JSON.stringify(theme, null, 2)], { type: 'application/json' })
