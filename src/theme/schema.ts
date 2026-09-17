@@ -15,6 +15,15 @@ export type ColorTokens = {
   success: HexColor
   warning: HexColor
   danger: HexColor
+  bgHover: HexColor
+  bgActive: HexColor
+  textInverse: HexColor
+  borderStrong: HexColor
+  focusRing: HexColor
+  info: HexColor
+  link: HexColor
+  codeBg: HexColor
+  overlay: HexColor
 }
 
 export type TypographyTokens = {
@@ -66,6 +75,12 @@ export type ShadowTokens = {
   sm: string
   md: string
   lg: string
+  button: string
+  input: string
+  card: string
+  focus: string
+  inner: string
+  glow: string
 }
 
 export type BorderTokens = {
@@ -79,6 +94,14 @@ export type TransitionTokens = {
   slow: string
 }
 
+export type BreakpointTokens = {
+  sm: string
+  md: string
+  lg: string
+  xl: string
+  '2xl': string
+}
+
 export type Theme = {
   name: string
   colors: ColorTokens
@@ -88,5 +111,6 @@ export type Theme = {
   shadows: ShadowTokens
   borders: BorderTokens
   transitions: TransitionTokens
+  breakpoints: BreakpointTokens
   customCss: string
 }
