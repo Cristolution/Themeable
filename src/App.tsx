@@ -1,24 +1,18 @@
 import { useEffect, useState } from 'react'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import { useBreakpoint } from './hooks/useBreakpoint'
 import { useTheme } from './state/useTheme'
 import { validateTheme } from './theme/validate'
 import { presets } from './theme/presets'
 import { Nav } from './components/dashboard/Nav'
 import { Sidebar } from './components/dashboard/Sidebar'
-import { StatCard } from './components/dashboard/StatCard'
-import { LineChartCard } from './components/dashboard/LineChartCard'
-import { BarChartCard } from './components/dashboard/BarChartCard'
-import { DataTable } from './components/dashboard/DataTable'
-import { FormCard } from './components/dashboard/FormCard'
-import { ActivityFeed } from './components/dashboard/ActivityFeed'
-import { CalendarWidget } from './components/dashboard/CalendarWidget'
-import { FeatureCards } from './components/dashboard/FeatureCards'
 import { EditorPanel } from './components/editor/EditorPanel'
 import { JsonEditor } from './components/editor/JsonEditor'
 import { PresetGallery } from './components/editor/PresetGallery'
 import { ImportExport } from './components/editor/ImportExport'
 import { Toast } from './components/ui/Toast'
-import { kpis, lineData, barData, tableRows, activity, featureCards } from './dashboard/sampleData'
+import { DashboardPage } from './pages/DashboardPage'
+import { NotFoundPage } from './pages/NotFoundPage'
 
 export default function App() {
   const { theme, setTheme, dirty, save, reset } = useTheme()
@@ -87,25 +81,11 @@ export default function App() {
       <div className={`app-body ${isWide ? '' : 'app-body--narrow'}`}>
         <Sidebar />
         <main className="app-main">
-          <h2 style={{ marginBottom: 'var(--space-lg)' }}>Overview</h2>
-          <div className="kpi-grid">
-            {kpis.map(k => <StatCard key={k.id} {...k} />)}
-          </div>
-          <div className="chart-grid" style={{ marginTop: 'var(--space-lg)' }}>
-            <LineChartCard data={lineData} />
-            <BarChartCard data={barData} />
-          </div>
-          <div style={{ marginTop: 'var(--space-lg)' }}>
-            <DataTable rows={tableRows} />
-          </div>
-          <div style={{ marginTop: 'var(--space-lg)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-md)' }}>
-            <FormCard />
-            <ActivityFeed entries={activity} />
-          </div>
-          <div style={{ marginTop: 'var(--space-lg)', display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 'var(--space-md)' }}>
-            <CalendarWidget />
-            <FeatureCards features={featureCards} />
-          </div>
+          <Routes>
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
         </main>
         {isWide ? (
           <EditorPanel

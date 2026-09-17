@@ -1,3 +1,4 @@
+import { NavLink } from 'react-router-dom'
 import { Button } from '../ui/Button'
 
 type Props = {
@@ -17,10 +18,18 @@ export function Nav({ themeName, dirty, onSave, onExport, onImport, onReset }: P
         <span className="nav__title">Themeable</span>
       </div>
       <nav className="nav__links">
-        <a className="nav__link nav__link--active" href="#">Dashboard</a>
-        <a className="nav__link" href="#">Projects</a>
-        <a className="nav__link" href="#">Reports</a>
-        <a className="nav__link" href="#">Settings</a>
+        <NavLink to="/dashboard" className={({ isActive }) => 'nav__link' + (isActive ? ' nav__link--active' : '')}>
+          Dashboard
+        </NavLink>
+        <NavLink to="/projects" className={({ isActive }) => 'nav__link' + (isActive ? ' nav__link--active' : '')}>
+          Projects
+        </NavLink>
+        <NavLink to="/reports" className={({ isActive }) => 'nav__link' + (isActive ? ' nav__link--active' : '')}>
+          Reports
+        </NavLink>
+        <NavLink to="/settings" className={({ isActive }) => 'nav__link' + (isActive ? ' nav__link--active' : '')}>
+          Settings
+        </NavLink>
       </nav>
       <div className="nav__actions">
         <span className="nav__theme-name">
