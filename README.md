@@ -28,6 +28,17 @@ Open `http://localhost:5173/`.
 - **`useBreakpoint` hook** — reads a breakpoint token from the active theme (replaces the old `useMediaQuery`)
 - **Editor expanded** — the visual editor now exposes the 9 new colors, 6 new shadows, and 5 new breakpoints
 
+## What's new in v3
+
+- **Text direction as a theme token** — every `Theme` now carries `direction: 'ltr' | 'rtl'`. When `applyTheme` runs, it sets `<html dir="...">` so the entire layout flips. `validateTheme` rejects anything that isn't `ltr` or `rtl`, all four built-in presets ship with `direction: 'ltr'`, and the visual editor exposes a dedicated LTR / RTL toggle at the top.
+- **7 new shared UI components** — `Checkbox`, `Radio` + `RadioGroup`, `Drawer`, `HamburgerMenu`, `FontPicker`, `LengthInput`, `SizePreview`.
+- **`FontPicker` with 200+ entries** — a searchable dropdown of over 230 curated font stacks (system stacks, web-safe families, serif/sans/mono/display categories), with an "Edit" affordance for custom stacks.
+- **Editor overhaul for length tokens** — every font-size, spacing, radius, and border-width field now uses `LengthInput` (number input + unit dropdown for `px` / `rem` / `em` / `%` / `vh` / `vw` / `pt` / `ch`) paired with a `SizePreview` that renders a visual preview of the value (font sample, dot of the right size, rounded-corner swatch, spacing bar).
+- **Responsive shell** — at narrow viewports the desktop nav links collapse behind a `HamburgerMenu` button that opens the sidebar inside a `Drawer`. Sidebar links use logical properties so the drawer slides in from the correct inline edge in both LTR and RTL.
+- **Responsive editor panel** — the editor slides up as a bottom sheet at tablet widths and goes full-screen on mobile, with the visual / JSON tab strip pinned to the top.
+- **Responsive dashboards** — dashboard grids, stat cards, and feature cards reflow across `sm` / `md` / `lg` breakpoints.
+- **RTL via logical CSS properties** — `base.css` was rewritten to use `margin-inline-*`, `padding-inline-*`, `border-inline-start` / `border-inline-end`, `inset-inline-*`, and friends. All components honor the active `direction` automatically with no per-component branching.
+
 ## Project structure
 
 ```
@@ -41,8 +52,10 @@ src/
   components/
     editor/      EditorPanel, VisualEditor, JsonEditor, PresetGallery, ImportExport
     dashboard/  Nav, Sidebar, StatCard, charts, table, form, feed, calendar, features
-    ui/         Button, Input, Select, Card, Pill, Toast,
-                InfoPill, Link, Modal, CodeBlock
+    ui/         Button, Input, Select, Checkbox, Radio, RadioGroup,
+                Card, Pill, Toast, Drawer, HamburgerMenu,
+                InfoPill, Link, Modal, CodeBlock,
+                FontPicker, LengthInput, SizePreview
   styles/       base.css, components.css
   hooks/        useBreakpoint
   App.tsx       Routes are declared inline (no router.tsx file)
@@ -62,6 +75,7 @@ See `src/theme/schema.ts` for the full TypeScript schema. Top-level keys:
 - `transitions` — fast, normal, slow (CSS transition values)
 - `breakpoints` — sm, md, lg, xl, 2xl (CSS length strings)
 - `customCss` — raw CSS appended after `:root` (no `<script>` allowed)
+- `direction` — `'ltr' | 'rtl'`. Sets `<html dir>` when the theme is applied; layout uses logical CSS properties so the entire UI flips for RTL.
 
 ## Tests
 
