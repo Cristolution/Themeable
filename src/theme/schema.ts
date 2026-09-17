@@ -102,6 +102,8 @@ export type BreakpointTokens = {
   '2xl': string
 }
 
+export type Direction = 'ltr' | 'rtl'
+
 export type Theme = {
   name: string
   colors: ColorTokens
@@ -113,4 +115,5 @@ export type Theme = {
   transitions: TransitionTokens
   breakpoints: BreakpointTokens
   customCss: string
+  direction: Direction
 }
