@@ -232,3 +232,11 @@
   grid-template-columns: repeat(4, 1fr);
   gap: var(--space-md);
 }
+
+/* ===== Chart grid ===== */
+
+.chart-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+}

@@ -1,8 +1,10 @@
 import { useTheme } from './state/useTheme'
 import { Nav } from './components/dashboard/Nav'
 import { Sidebar } from './components/dashboard/Sidebar'
-import { kpis } from './dashboard/sampleData'
+import { kpis, lineData, barData } from './dashboard/sampleData'
 import { StatCard } from './components/dashboard/StatCard'
+import { LineChartCard } from './components/dashboard/LineChartCard'
+import { BarChartCard } from './components/dashboard/BarChartCard'
 
 export default function App() {
   const { theme, dirty, save, reset } = useTheme()
@@ -46,6 +48,10 @@ export default function App() {
           <h2 style={{ marginBottom: 'var(--space-lg)' }}>Overview</h2>
           <div className="kpi-grid">
             {kpis.map(k => <StatCard key={k.id} {...k} />)}
+          </div>
+          <div className="chart-grid" style={{ marginTop: 'var(--space-lg)' }}>
+            <LineChartCard data={lineData} />
+            <BarChartCard data={barData} />
           </div>
         </main>
       </div>
