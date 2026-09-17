@@ -18,6 +18,7 @@ export function themeToCss(theme: Theme): string {
  * Inject theme CSS into the document. Reuses a single <style> element.
  */
 export function applyTheme(theme: Theme): void {
+  document.documentElement.setAttribute('dir', theme.direction)
   const css = themeToCss(theme)
   let styleEl = document.getElementById(STYLE_ID) as HTMLStyleElement | null
   if (!styleEl) {
