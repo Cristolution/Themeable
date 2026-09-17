@@ -55,6 +55,17 @@ function flattenToVars(theme: Theme): VarEntry[] {
   out.push({ name: '--color-warning', value: theme.colors.warning })
   out.push({ name: '--color-danger', value: theme.colors.danger })
 
+  // New colors
+  out.push({ name: '--color-bg-hover', value: theme.colors.bgHover })
+  out.push({ name: '--color-bg-active', value: theme.colors.bgActive })
+  out.push({ name: '--color-text-inverse', value: theme.colors.textInverse })
+  out.push({ name: '--color-border-strong', value: theme.colors.borderStrong })
+  out.push({ name: '--color-focus-ring', value: theme.colors.focusRing })
+  out.push({ name: '--color-info', value: theme.colors.info })
+  out.push({ name: '--color-link', value: theme.colors.link })
+  out.push({ name: '--color-code-bg', value: theme.colors.codeBg })
+  out.push({ name: '--color-overlay', value: theme.colors.overlay })
+
   // Typography — font families
   out.push({ name: '--font-body', value: theme.typography.fontFamily.body })
   out.push({ name: '--font-heading', value: theme.typography.fontFamily.heading })
@@ -90,6 +101,17 @@ function flattenToVars(theme: Theme): VarEntry[] {
   // Shadows
   for (const [k, v] of Object.entries(theme.shadows)) {
     out.push({ name: `--shadow-${k}`, value: v })
+  }
+
+  // New shadows
+  for (const [k, v] of Object.entries(theme.shadows)) {
+    if (k === 'none' || k === 'sm' || k === 'md' || k === 'lg') continue
+    out.push({ name: `--shadow-${k}`, value: v })
+  }
+
+  // Breakpoints
+  for (const [k, v] of Object.entries(theme.breakpoints)) {
+    out.push({ name: `--breakpoint-${k}`, value: v })
   }
 
   // Borders
