@@ -240,3 +240,28 @@
   grid-template-columns: 1fr 1fr;
   gap: var(--space-md);
 }
+
+/* ===== DataTable ===== */
+
+.table-wrap { overflow-x: auto; }
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+.data-table th, .data-table td {
+  padding: var(--space-sm) var(--space-md);
+  text-align: left;
+  border-bottom: var(--border-width) var(--border-style) var(--color-border);
+}
+.data-table thead th {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.data-table__th--sortable { cursor: pointer; user-select: none; }
+.data-table__th--sortable:hover { color: var(--color-text); }
+.data-table tbody tr:hover { background: var(--color-bg-subtle); }
+.data-table__muted { color: var(--color-text-muted); }

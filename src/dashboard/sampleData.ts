@@ -31,3 +31,20 @@ export const barData = [
   { name: 'Referral', value: 180 },
   { name: 'Other',    value:  90 }
 ]
+
+export type TableStatus = 'active' | 'pending' | 'archived'
+export type TableRow = {
+  id: string
+  name: string
+  status: TableStatus
+  owner: string
+  updated: string
+}
+
+export const tableRows: TableRow[] = [
+  { id: '1', name: 'Onboarding flow redesign',   status: 'active',   owner: 'Alex Kim',    updated: '2 hours ago' },
+  { id: '2', name: 'Q4 marketing campaign',      status: 'pending',  owner: 'Priya Shah',  updated: 'Yesterday' },
+  { id: '3', name: 'Mobile app performance',     status: 'active',   owner: 'Diego Lopez', updated: '3 days ago' },
+  { id: '4', name: 'Deprecated payment gateway', status: 'archived', owner: 'Mia Chen',    updated: 'Last week' },
+  { id: '5', name: 'Customer support migration', status: 'pending',  owner: 'Sam Patel',   updated: 'Last week' }
+]

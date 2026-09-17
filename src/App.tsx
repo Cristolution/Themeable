@@ -1,10 +1,11 @@
 import { useTheme } from './state/useTheme'
 import { Nav } from './components/dashboard/Nav'
 import { Sidebar } from './components/dashboard/Sidebar'
-import { kpis, lineData, barData } from './dashboard/sampleData'
+import { kpis, lineData, barData, tableRows } from './dashboard/sampleData'
 import { StatCard } from './components/dashboard/StatCard'
 import { LineChartCard } from './components/dashboard/LineChartCard'
 import { BarChartCard } from './components/dashboard/BarChartCard'
+import { DataTable } from './components/dashboard/DataTable'
 
 export default function App() {
   const { theme, dirty, save, reset } = useTheme()
@@ -52,6 +53,9 @@ export default function App() {
           <div className="chart-grid" style={{ marginTop: 'var(--space-lg)' }}>
             <LineChartCard data={lineData} />
             <BarChartCard data={barData} />
+          </div>
+          <div style={{ marginTop: 'var(--space-lg)' }}>
+            <DataTable rows={tableRows} />
           </div>
         </main>
       </div>
