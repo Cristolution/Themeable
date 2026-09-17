@@ -12,6 +12,14 @@ import { PresetGallery } from './components/editor/PresetGallery'
 import { ImportExport } from './components/editor/ImportExport'
 import { Toast } from './components/ui/Toast'
 import { DashboardPage } from './pages/DashboardPage'
+import { ActivityPage } from './pages/ActivityPage'
+import { CalendarPage } from './pages/CalendarPage'
+import { ProjectsPage } from './pages/ProjectsPage'
+import { TasksPage } from './pages/TasksPage'
+import { FilesPage } from './pages/FilesPage'
+import { ProfilePage } from './pages/ProfilePage'
+import { SettingsPage } from './pages/SettingsPage'
+import { HelpPage } from './pages/HelpPage'
 import { NotFoundPage } from './pages/NotFoundPage'
 
 export default function App() {
@@ -84,6 +92,14 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/activity" element={<ActivityPage />} />
+            <Route path="/calendar" element={<CalendarPage />} />
+            <Route path="/projects" element={<ProjectsPage />} />
+            <Route path="/tasks" element={<TasksPage />} />
+            <Route path="/files" element={<FilesPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/help" element={<HelpPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>

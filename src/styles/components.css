@@ -639,3 +639,20 @@
   line-height: var(--line-height-normal);
   margin: 0;
 }
+
+/* ===== Settings tabs ===== */
+
+.settings-tab {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: var(--space-sm) var(--space-md);
+  color: var(--color-text-muted);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+.settings-tab:hover { color: var(--color-text); }
+.settings-tab--active { color: var(--color-accent); border-bottom-color: var(--color-accent); }
