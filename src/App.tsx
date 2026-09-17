@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useMediaQuery } from './hooks/useMediaQuery'
+import { useBreakpoint } from './hooks/useBreakpoint'
 import { useTheme } from './state/useTheme'
 import { validateTheme } from './theme/validate'
 import { presets } from './theme/presets'
@@ -23,7 +23,7 @@ import { kpis, lineData, barData, tableRows, activity, featureCards } from './da
 export default function App() {
   const { theme, setTheme, dirty, save, reset } = useTheme()
   const [toast, setToast] = useState<{ message: string; tone: 'error' | 'success' } | null>(null)
-  const isWide = useMediaQuery('(min-width: 1024px)')
+  const isWide = useBreakpoint('lg')
   const [editorOpen, setEditorOpen] = useState(false)
 
   useEffect(() => {
