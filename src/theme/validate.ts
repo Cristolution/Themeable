@@ -5,6 +5,7 @@ type Result =
   | { ok: false; errors: string[] }
 
 const HEX_RE = /^#[0-9a-fA-F]{3,8}$/
+const RGBA_RE = /^rgba?\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*(?:,\s*[\d.]+\s*)?\)$/
 const BORDER_STYLES: ReadonlyArray<Theme['borders']['style']> = ['solid', 'dashed', 'dotted', 'none']
 
 function isObject(v: unknown): v is Record<string, unknown> {
@@ -22,7 +23,7 @@ function ok(theme: Theme): Result {
 export function validateTheme(input: unknown): Result {
   if (!isObject(input)) return fail(['theme must be an object'])
 
-  const requiredTop = ['name', 'colors', 'typography', 'spacing', 'radius', 'shadows', 'borders', 'transitions', 'customCss']
+  const requiredTop = ['name', 'colors', 'typography', 'spacing', 'radius', 'shadows', 'borders', 'transitions', 'breakpoints', 'customCss']
   const errors: string[] = []
   for (const key of requiredTop) {
     if (!(key in input)) errors.push(`missing top-level key: ${key}`)
@@ -37,8 +38,14 @@ export function validateTheme(input: unknown): Result {
     errors.push('colors must be an object')
   } else {
     for (const [k, v] of Object.entries(input.colors)) {
-      if (typeof v !== 'string' || !HEX_RE.test(v)) {
+      if (typeof v !== 'string' || (!HEX_RE.test(v) && !RGBA_RE.test(v))) {
         errors.push(`colors.${k} must be a hex color (got ${JSON.stringify(v)})`)
+      }
+    }
+    const requiredColors = ['bg', 'bgElevated', 'bgSubtle', 'text', 'textMuted', 'border', 'accent', 'accentText', 'success', 'warning', 'danger', 'bgHover', 'bgActive', 'textInverse', 'borderStrong', 'focusRing', 'info', 'link', 'codeBg', 'overlay']
+    for (const k of requiredColors) {
+      if (!(k in input.colors)) {
+        errors.push(`colors.${k} missing`)
       }
     }
   }
@@ -93,7 +100,13 @@ export function validateTheme(input: unknown): Result {
   if (!isObject(input.shadows)) errors.push('shadows must be an object')
   else {
     for (const [k, v] of Object.entries(input.shadows)) {
-      if (typeof v !== 'string') errors.push(`shadows.${k} must be a string`)
+      if (typeof v !== 'string' || v.length === 0) errors.push(`shadows.${k} must be a non-empty string`)
+    }
+    const requiredShadows = ['none', 'sm', 'md', 'lg', 'button', 'input', 'card', 'focus', 'inner', 'glow']
+    for (const k of requiredShadows) {
+      if (!(k in input.shadows)) {
+        errors.push(`shadows.${k} missing`)
+      }
     }
   }
 
@@ -111,6 +124,15 @@ export function validateTheme(input: unknown): Result {
   else {
     for (const [k, v] of Object.entries(input.transitions)) {
       if (typeof v !== 'string') errors.push(`transitions.${k} must be a string`)
+    }
+  }
+
+  // breakpoints
+  if (!isObject(input.breakpoints)) {
+    errors.push('breakpoints must be an object')
+  } else {
+    for (const [k, v] of Object.entries(input.breakpoints)) {
+      if (typeof v !== 'string' || v.length === 0) errors.push(`breakpoints.${k} must be a non-empty string`)
     }
   }
 
