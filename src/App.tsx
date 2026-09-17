@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useMediaQuery } from './hooks/useMediaQuery'
 import { useTheme } from './state/useTheme'
 import { validateTheme } from './theme/validate'
 import { presets } from './theme/presets'
@@ -22,6 +23,8 @@ import { kpis, lineData, barData, tableRows, activity, featureCards } from './da
 export default function App() {
   const { theme, setTheme, dirty, save, reset } = useTheme()
   const [toast, setToast] = useState<{ message: string; tone: 'error' | 'success' } | null>(null)
+  const isWide = useMediaQuery('(min-width: 1024px)')
+  const [editorOpen, setEditorOpen] = useState(false)
 
   useEffect(() => {
     if (!dirty) return
@@ -81,7 +84,7 @@ export default function App() {
           if (!dirty || confirm('Discard unsaved changes?')) reset()
         }}
       />
-      <div className="app-body">
+      <div className={`app-body ${isWide ? '' : 'app-body--narrow'}`}>
         <Sidebar />
         <main className="app-main">
           <h2 style={{ marginBottom: 'var(--space-lg)' }}>Overview</h2>
@@ -104,11 +107,28 @@ export default function App() {
             <FeatureCards features={featureCards} />
           </div>
         </main>
-        <EditorPanel
-          theme={theme}
-          onChange={setTheme}
-          jsonSlot={<JsonEditor theme={theme} onChange={setTheme} />}
-        />
+        {isWide ? (
+          <EditorPanel
+            theme={theme}
+            onChange={setTheme}
+            jsonSlot={<JsonEditor theme={theme} onChange={setTheme} />}
+          />
+        ) : (
+          <>
+            {editorOpen && (
+              <div className="editor-sheet">
+                <EditorPanel
+                  theme={theme}
+                  onChange={setTheme}
+                  jsonSlot={<JsonEditor theme={theme} onChange={setTheme} />}
+                />
+              </div>
+            )}
+            <button className="editor-toggle" onClick={() => setEditorOpen(o => !o)}>
+              {editorOpen ? 'Close editor' : 'Edit theme'}
+            </button>
+          </>
+        )}
       </div>
       <div className="app-bottombar">
         <PresetGallery

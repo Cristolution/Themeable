@@ -534,3 +534,39 @@
 }
 
 .import-export { display: flex; gap: var(--space-sm); }
+
+/* ===== Responsive layout ===== */
+
+@media (max-width: 1023px) {
+  .app-body--narrow {
+    flex-direction: column;
+    position: relative;
+  }
+  .app-body--narrow .app-main { width: 100%; }
+  .app-body--narrow .sidebar { width: 100%; border-right: none; border-bottom: var(--border-width) var(--border-style) var(--color-border); flex-direction: row; overflow-x: auto; gap: var(--space-md); }
+  .app-body--narrow .sidebar__section { flex-shrink: 0; }
+
+  .editor-sheet {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+  }
+  .editor-sheet .editor-panel { width: 100%; border-left: none; }
+
+  .editor-toggle {
+    position: fixed;
+    bottom: var(--space-lg);
+    right: var(--space-lg);
+    background: var(--color-accent);
+    color: var(--color-accent-text);
+    border: none;
+    border-radius: var(--radius-full);
+    padding: var(--space-md) var(--space-lg);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    box-shadow: var(--shadow-lg);
+    cursor: pointer;
+    z-index: 101;
+  }
+}
