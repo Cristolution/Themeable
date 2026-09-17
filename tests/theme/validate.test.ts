@@ -33,7 +33,8 @@ const validTheme: Theme = {
   borders: { width: '1px', style: 'solid' },
   transitions: { fast: '120ms ease', normal: '200ms ease', slow: '400ms ease' },
   breakpoints: { sm: '640px', md: '768px', lg: '1024px', xl: '1280px', '2xl': '1536px' },
-  customCss: ''
+  customCss: '',
+  direction: 'ltr' as const
 }
 
 describe('validateTheme', () => {
@@ -125,6 +126,15 @@ describe('validateTheme', () => {
     expect(result.ok).toBe(false)
     if (!result.ok) {
       expect(result.errors.some(e => e.toLowerCase().includes('color') || e.includes('bgHover'))).toBe(true)
+    }
+  })
+
+  it('rejects theme with bad direction', () => {
+    const bad = { ...validTheme, direction: 'auto' as unknown as Theme['direction'] }
+    const result = validateTheme(bad)
+    expect(result.ok).toBe(false)
+    if (!result.ok) {
+      expect(result.errors.some(e => e.includes('direction'))).toBe(true)
     }
   })
 
