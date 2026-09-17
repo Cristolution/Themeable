@@ -19,6 +19,7 @@ export function themeToCss(theme: Theme): string {
  */
 export function applyTheme(theme: Theme): void {
   document.documentElement.setAttribute('dir', theme.direction)
+  document.documentElement.style.filter = theme.nightMode ? 'invert(1) hue-rotate(180deg)' : ''
   const css = themeToCss(theme)
   let styleEl = document.getElementById(STYLE_ID) as HTMLStyleElement | null
   if (!styleEl) {
