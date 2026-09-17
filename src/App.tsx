@@ -10,9 +10,10 @@ import { FormCard } from './components/dashboard/FormCard'
 import { ActivityFeed } from './components/dashboard/ActivityFeed'
 import { CalendarWidget } from './components/dashboard/CalendarWidget'
 import { FeatureCards } from './components/dashboard/FeatureCards'
+import { EditorPanel } from './components/editor/EditorPanel'
 
 export default function App() {
-  const { theme, dirty, save, reset } = useTheme()
+  const { theme, setTheme, dirty, save, reset } = useTheme()
 
   const handleExport = () => {
     const blob = new Blob([JSON.stringify(theme, null, 2)], { type: 'application/json' })
@@ -70,6 +71,7 @@ export default function App() {
             <FeatureCards features={featureCards} />
           </div>
         </main>
+        <EditorPanel theme={theme} onChange={setTheme} />
       </div>
     </div>
   )

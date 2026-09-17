@@ -361,3 +361,79 @@
 .feature__icon { font-size: 28px; line-height: 1; }
 .feature__title { font-family: var(--font-heading); font-size: var(--font-size-lg); font-weight: var(--font-weight-medium); }
 .feature__desc { font-size: var(--font-size-sm); color: var(--color-text-muted); line-height: var(--line-height-normal); }
+/* ===== Editor panel ===== */
+
+.editor-panel {
+  width: 420px;
+  background: var(--color-bg-elevated);
+  border-left: var(--border-width) var(--border-style) var(--color-border);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.editor-panel__tabs {
+  display: flex;
+  border-bottom: var(--border-width) var(--border-style) var(--color-border);
+}
+.editor-panel__tab {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: var(--space-md);
+  color: var(--color-text-muted);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+.editor-panel__tab:hover { color: var(--color-text); }
+.editor-panel__tab--active {
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
+}
+.editor-panel__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-lg);
+}
+
+/* Visual editor */
+.visual-editor { display: flex; flex-direction: column; gap: var(--space-xl); }
+.ve-section { display: flex; flex-direction: column; gap: var(--space-md); }
+.ve-section__title {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+.ve-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+}
+.ve-stack { display: flex; flex-direction: column; gap: var(--space-sm); }
+.ve-field { display: flex; flex-direction: column; gap: var(--space-xs); }
+.ve-field__label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+.ve-color { display: flex; align-items: center; gap: var(--space-sm); justify-content: space-between; }
+.ve-color__label { font-size: var(--font-size-xs); color: var(--color-text-muted); text-transform: capitalize; }
+.ve-color input[type="color"] {
+  width: 36px;
+  height: 28px;
+  border: var(--border-width) var(--border-style) var(--color-border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+}
+.ve-textarea {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  resize: vertical;
+}
