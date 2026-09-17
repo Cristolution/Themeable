@@ -103,12 +103,6 @@ function flattenToVars(theme: Theme): VarEntry[] {
     out.push({ name: `--shadow-${k}`, value: v })
   }
 
-  // New shadows
-  for (const [k, v] of Object.entries(theme.shadows)) {
-    if (k === 'none' || k === 'sm' || k === 'md' || k === 'lg') continue
-    out.push({ name: `--shadow-${k}`, value: v })
-  }
-
   // Breakpoints
   for (const [k, v] of Object.entries(theme.breakpoints)) {
     out.push({ name: `--breakpoint-${k}`, value: v })
