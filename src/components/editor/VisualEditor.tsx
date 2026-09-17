@@ -39,6 +39,15 @@ export function VisualEditor({ theme, onChange }: Props) {
   const updateShadow = (key: keyof Theme['shadows'], value: string) =>
     update(t => ({ ...t, shadows: { ...t.shadows, [key]: value } }))
 
+  const updateNewColor = (key: keyof Theme['colors'], value: string) =>
+    update(t => ({ ...t, colors: { ...t.colors, [key]: value } }))
+
+  const updateNewShadow = (key: keyof Theme['shadows'], value: string) =>
+    update(t => ({ ...t, shadows: { ...t.shadows, [key]: value } }))
+
+  const updateBreakpoint = (key: keyof Theme['breakpoints'], value: string) =>
+    update(t => ({ ...t, breakpoints: { ...t.breakpoints, [key]: value } }))
+
   const updateBorders = (field: keyof Theme['borders'], value: string) =>
     update(t => ({ ...t, borders: { ...t.borders, [field]: value } }))
 
@@ -61,6 +70,48 @@ export function VisualEditor({ theme, onChange }: Props) {
               <input type="color" value={v} onChange={e => updateColor(k as keyof Theme['colors'], e.target.value)} />
             </label>
           ))}
+        </div>
+      </section>
+
+      <section className="ve-section">
+        <h4 className="ve-section__title">Hover & active colors</h4>
+        <div className="ve-grid">
+          <label className="ve-color">
+            <span className="ve-color__label">bgHover</span>
+            <input type="color" value={theme.colors.bgHover} onChange={e => updateNewColor('bgHover', e.target.value)} />
+          </label>
+          <label className="ve-color">
+            <span className="ve-color__label">bgActive</span>
+            <input type="color" value={theme.colors.bgActive} onChange={e => updateNewColor('bgActive', e.target.value)} />
+          </label>
+          <label className="ve-color">
+            <span className="ve-color__label">textInverse</span>
+            <input type="color" value={theme.colors.textInverse} onChange={e => updateNewColor('textInverse', e.target.value)} />
+          </label>
+          <label className="ve-color">
+            <span className="ve-color__label">borderStrong</span>
+            <input type="color" value={theme.colors.borderStrong} onChange={e => updateNewColor('borderStrong', e.target.value)} />
+          </label>
+          <label className="ve-color">
+            <span className="ve-color__label">focusRing</span>
+            <input type="color" value={theme.colors.focusRing} onChange={e => updateNewColor('focusRing', e.target.value)} />
+          </label>
+          <label className="ve-color">
+            <span className="ve-color__label">info</span>
+            <input type="color" value={theme.colors.info} onChange={e => updateNewColor('info', e.target.value)} />
+          </label>
+          <label className="ve-color">
+            <span className="ve-color__label">link</span>
+            <input type="color" value={theme.colors.link} onChange={e => updateNewColor('link', e.target.value)} />
+          </label>
+          <label className="ve-color">
+            <span className="ve-color__label">codeBg</span>
+            <input type="color" value={theme.colors.codeBg} onChange={e => updateNewColor('codeBg', e.target.value)} />
+          </label>
+          <label className="ve-color">
+            <span className="ve-color__label">overlay</span>
+            <input type="color" value={theme.colors.overlay} onChange={e => updateNewColor('overlay', e.target.value)} />
+          </label>
         </div>
       </section>
 
@@ -151,6 +202,36 @@ export function VisualEditor({ theme, onChange }: Props) {
       </section>
 
       <section className="ve-section">
+        <h4 className="ve-section__title">Special shadows</h4>
+        <div className="ve-stack">
+          <label className="ve-field">
+            <span className="ve-field__label">button</span>
+            <input className="field__input" value={theme.shadows.button} onChange={e => updateNewShadow('button', e.target.value)} />
+          </label>
+          <label className="ve-field">
+            <span className="ve-field__label">input</span>
+            <input className="field__input" value={theme.shadows.input} onChange={e => updateNewShadow('input', e.target.value)} />
+          </label>
+          <label className="ve-field">
+            <span className="ve-field__label">card</span>
+            <input className="field__input" value={theme.shadows.card} onChange={e => updateNewShadow('card', e.target.value)} />
+          </label>
+          <label className="ve-field">
+            <span className="ve-field__label">focus</span>
+            <input className="field__input" value={theme.shadows.focus} onChange={e => updateNewShadow('focus', e.target.value)} />
+          </label>
+          <label className="ve-field">
+            <span className="ve-field__label">inner</span>
+            <input className="field__input" value={theme.shadows.inner} onChange={e => updateNewShadow('inner', e.target.value)} />
+          </label>
+          <label className="ve-field">
+            <span className="ve-field__label">glow</span>
+            <input className="field__input" value={theme.shadows.glow} onChange={e => updateNewShadow('glow', e.target.value)} />
+          </label>
+        </div>
+      </section>
+
+      <section className="ve-section">
         <h4 className="ve-section__title">Borders</h4>
         <div className="ve-grid">
           <label className="ve-field">
@@ -173,6 +254,22 @@ export function VisualEditor({ theme, onChange }: Props) {
             <label key={k} className="ve-field">
               <span className="ve-field__label">{k}</span>
               <input className="field__input" value={v} onChange={e => updateTransition(k as keyof Theme['transitions'], e.target.value)} />
+            </label>
+          ))}
+        </div>
+      </section>
+
+      <section className="ve-section">
+        <h4 className="ve-section__title">Breakpoints</h4>
+        <div className="ve-grid">
+          {Object.entries(theme.breakpoints).map(([k, v]) => (
+            <label key={k} className="ve-field">
+              <span className="ve-field__label">{k}</span>
+              <input
+                className="field__input"
+                value={v}
+                onChange={e => updateBreakpoint(k as keyof Theme['breakpoints'], e.target.value)}
+              />
             </label>
           ))}
         </div>
