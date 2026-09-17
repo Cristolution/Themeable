@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import { Button } from '../ui/Button'
+import { HamburgerMenu } from '../ui/HamburgerMenu'
 
 type Props = {
   themeName: string
@@ -8,16 +9,21 @@ type Props = {
   onExport: () => void
   onImport: () => void
   onReset: () => void
+  menuOpen: boolean
+  onToggleMenu: () => void
 }
 
-export function Nav({ themeName, dirty, onSave, onExport, onImport, onReset }: Props) {
+export function Nav({ themeName, dirty, onSave, onExport, onImport, onReset, menuOpen, onToggleMenu }: Props) {
   return (
     <header className="nav">
       <div className="nav__brand">
+        <span className="nav__hamburger">
+          <HamburgerMenu open={menuOpen} onToggle={onToggleMenu} ariaLabel="Toggle menu" />
+        </span>
         <span className="nav__logo">◆</span>
         <span className="nav__title">Themeable</span>
       </div>
-      <nav className="nav__links">
+      <nav className="nav__links nav__links--desktop">
         <NavLink to="/dashboard" className={({ isActive }) => 'nav__link' + (isActive ? ' nav__link--active' : '')}>
           Dashboard
         </NavLink>

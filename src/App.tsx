@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useBreakpoint } from './hooks/useBreakpoint'
+import { useIsMobile } from './hooks/useIsMobile'
+import { useIsTablet } from './hooks/useIsTablet'
 import { useTheme } from './state/useTheme'
 import { validateTheme } from './theme/validate'
 import { presets } from './theme/presets'
@@ -10,6 +12,7 @@ import { EditorPanel } from './components/editor/EditorPanel'
 import { JsonEditor } from './components/editor/JsonEditor'
 import { PresetGallery } from './components/editor/PresetGallery'
 import { ImportExport } from './components/editor/ImportExport'
+import { Drawer } from './components/ui/Drawer'
 import { Toast } from './components/ui/Toast'
 import { DashboardPage } from './pages/DashboardPage'
 import { ActivityPage } from './pages/ActivityPage'
@@ -26,7 +29,10 @@ export default function App() {
   const { theme, setTheme, dirty, save, reset } = useTheme()
   const [toast, setToast] = useState<{ message: string; tone: 'error' | 'success' } | null>(null)
   const isWide = useBreakpoint('lg')
+  const isMobile = useIsMobile()
+  const isTablet = useIsTablet()
   const [editorOpen, setEditorOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
     if (!dirty) return
@@ -37,6 +43,11 @@ export default function App() {
     window.addEventListener('beforeunload', handler)
     return () => window.removeEventListener('beforeunload', handler)
   }, [dirty])
+
+  // Close menu when viewport widens to desktop
+  useEffect(() => {
+    if (isWide && menuOpen) setMenuOpen(false)
+  }, [isWide, menuOpen])
 
   const handleExport = () => {
     const blob = new Blob([JSON.stringify(theme, null, 2)], { type: 'application/json' })
@@ -70,11 +81,20 @@ export default function App() {
     setToast({ message: `Loaded preset: ${preset.name}`, tone: 'success' })
   }
 
+  // Editor sheet variant: full-screen overlay at mobile, bottom-sheet at tablet
+  const editorSheetClass = isMobile
+    ? 'editor-sheet editor-sheet--full'
+    : isTablet
+    ? 'editor-sheet editor-sheet--bottom'
+    : 'editor-sheet editor-sheet--full'
+
   return (
     <div className="app-shell">
       <Nav
         themeName={theme.name}
         dirty={dirty}
+        menuOpen={menuOpen}
+        onToggleMenu={() => setMenuOpen(o => !o)}
         onSave={() => {
           const result = save()
           if (result.ok) setToast({ message: 'Theme saved', tone: 'success' })
@@ -87,7 +107,18 @@ export default function App() {
         }}
       />
       <div className={`app-body ${isWide ? '' : 'app-body--narrow'}`}>
-        <Sidebar />
+        {isWide ? (
+          <Sidebar />
+        ) : (
+          <Drawer
+            open={menuOpen}
+            onClose={() => setMenuOpen(false)}
+            side="start"
+            title="Menu"
+          >
+            <Sidebar />
+          </Drawer>
+        )}
         <main className="app-main">
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
@@ -112,7 +143,7 @@ export default function App() {
         ) : (
           <>
             {editorOpen && (
-              <div className="editor-sheet">
+              <div className={editorSheetClass}>
                 <EditorPanel
                   theme={theme}
                   onChange={setTheme}
