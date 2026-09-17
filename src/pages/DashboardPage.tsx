@@ -24,11 +24,11 @@ export function DashboardPage() {
       <div style={{ marginTop: 'var(--space-lg)' }}>
         <DataTable rows={tableRows} />
       </div>
-      <div style={{ marginTop: 'var(--space-lg)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-md)' }}>
+      <div className="form-activity-row" style={{ marginTop: 'var(--space-lg)' }}>
         <FormCard />
         <ActivityFeed entries={activity} />
       </div>
-      <div style={{ marginTop: 'var(--space-lg)', display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 'var(--space-md)' }}>
+      <div className="calendar-features-row" style={{ marginTop: 'var(--space-lg)' }}>
         <CalendarWidget />
         <FeatureCards features={featureCards} />
       </div>

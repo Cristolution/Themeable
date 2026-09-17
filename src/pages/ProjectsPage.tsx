@@ -25,7 +25,7 @@ export function ProjectsPage() {
           </Button>
         ))}
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--space-md)' }}>
+      <div className="projects-grid">
         {visible.map(p => (
           <Card key={p.id} title={p.name} action={<Pill tone={statusToTone[p.status]}>{p.status}</Pill>}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-sm)' }}>

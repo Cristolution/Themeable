@@ -19,7 +19,7 @@ export function FilesPage() {
         </div>
         <Button onClick={() => setOpen(true)}>Upload</Button>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 'var(--space-md)' }}>
+      <div className="files-grid">
         <Card title="All files">
           <div className="table-wrap">
             <table className="data-table">

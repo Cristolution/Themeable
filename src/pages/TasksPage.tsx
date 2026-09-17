@@ -25,7 +25,7 @@ export function TasksPage() {
         <h2>Tasks</h2>
         <Button onClick={() => setOpen(true)}>+ Add task</Button>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--space-md)' }}>
+      <div className="kanban-grid">
         {columns.map(col => {
           const items = tasks.filter(t => t.column === col.id)
           return (

@@ -14,7 +14,7 @@ export function SettingsPage() {
   return (
     <>
       <h2 style={{ marginBottom: 'var(--space-lg)' }}>Settings</h2>
-      <div style={{ display: 'flex', gap: 'var(--space-sm)', marginBottom: 'var(--space-lg)', borderBottom: 'var(--border-width) var(--border-style) var(--color-border)' }}>
+      <div className="settings-tabs">
         {tabs.map(t => (
           <button
             key={t}
