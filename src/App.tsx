@@ -1,7 +1,7 @@
 import { useTheme } from './state/useTheme'
 import { Nav } from './components/dashboard/Nav'
 import { Sidebar } from './components/dashboard/Sidebar'
-import { kpis, lineData, barData, tableRows, activity } from './dashboard/sampleData'
+import { kpis, lineData, barData, tableRows, activity, featureCards } from './dashboard/sampleData'
 import { StatCard } from './components/dashboard/StatCard'
 import { LineChartCard } from './components/dashboard/LineChartCard'
 import { BarChartCard } from './components/dashboard/BarChartCard'
@@ -9,6 +9,7 @@ import { DataTable } from './components/dashboard/DataTable'
 import { FormCard } from './components/dashboard/FormCard'
 import { ActivityFeed } from './components/dashboard/ActivityFeed'
 import { CalendarWidget } from './components/dashboard/CalendarWidget'
+import { FeatureCards } from './components/dashboard/FeatureCards'
 
 export default function App() {
   const { theme, dirty, save, reset } = useTheme()
@@ -66,7 +67,7 @@ export default function App() {
           </div>
           <div style={{ marginTop: 'var(--space-lg)', display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 'var(--space-md)' }}>
             <CalendarWidget />
-            <div>Features placeholder</div>
+            <FeatureCards features={featureCards} />
           </div>
         </main>
       </div>

@@ -349,3 +349,15 @@
   color: var(--color-accent-text);
   font-weight: var(--font-weight-bold);
 }
+
+/* ===== FeatureCards ===== */
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md);
+}
+.feature { display: flex; flex-direction: column; gap: var(--space-sm); }
+.feature__icon { font-size: 28px; line-height: 1; }
+.feature__title { font-family: var(--font-heading); font-size: var(--font-size-lg); font-weight: var(--font-weight-medium); }
+.feature__desc { font-size: var(--font-size-sm); color: var(--color-text-muted); line-height: var(--line-height-normal); }

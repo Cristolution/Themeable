@@ -65,3 +65,16 @@ export const activity: ActivityEntry[] = [
   { id: '4', who: 'Mia Chen',    action: 'archived',   target: 'Deprecated payment gateway', when: '2 days ago',  tone: 'neutral' },
   { id: '5', who: 'Sam Patel',   action: 'failed',     target: 'Deploy pipeline',            when: '3 days ago',  tone: 'danger' }
 ]
+
+export type Feature = {
+  id: string
+  icon: string
+  title: string
+  description: string
+}
+
+export const featureCards: Feature[] = [
+  { id: 'f1', icon: '⚡', title: 'Live Preview',  description: 'Every theme edit updates the dashboard in real time.' },
+  { id: 'f2', icon: '📦', title: 'JSON Export',   description: 'Save and share themes as plain JSON files.' },
+  { id: 'f3', icon: '🎨', title: 'Custom CSS',    description: 'Drop in raw CSS for advanced overrides.' }
+]
