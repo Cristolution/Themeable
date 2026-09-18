@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 
 type Props = {
-  tone: 'success' | 'warning' | 'danger' | 'neutral'
+  tone: 'success' | 'warning' | 'danger' | 'neutral' | 'info'
   children: ReactNode
 }
 

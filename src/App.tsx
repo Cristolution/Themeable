@@ -24,6 +24,15 @@ import { ProfilePage } from './pages/ProfilePage'
 import { SettingsPage } from './pages/SettingsPage'
 import { HelpPage } from './pages/HelpPage'
 import { NotFoundPage } from './pages/NotFoundPage'
+import { SlidesPage } from './pages/SlidesPage'
+import { ChatPage } from './pages/ChatPage'
+import { KanbanPage } from './pages/KanbanPage'
+import { GalleryPage } from './pages/GalleryPage'
+import { HabitsPage } from './pages/HabitsPage'
+import { FinancePage } from './pages/FinancePage'
+import { NotesPage } from './pages/NotesPage'
+import { QuizPage } from './pages/QuizPage'
+import { SocialPage } from './pages/SocialPage'
 
 export default function App() {
   const { theme, setTheme, dirty, save, reset } = useTheme()
@@ -131,6 +140,15 @@ export default function App() {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/help" element={<HelpPage />} />
+            <Route path="/demos/slides" element={<SlidesPage />} />
+            <Route path="/demos/chat" element={<ChatPage />} />
+            <Route path="/demos/kanban" element={<KanbanPage />} />
+            <Route path="/demos/gallery" element={<GalleryPage />} />
+            <Route path="/demos/habits" element={<HabitsPage />} />
+            <Route path="/demos/finance" element={<FinancePage />} />
+            <Route path="/demos/notes" element={<NotesPage />} />
+            <Route path="/demos/quiz" element={<QuizPage />} />
+            <Route path="/demos/social" element={<SocialPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>
