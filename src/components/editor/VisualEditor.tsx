@@ -3,6 +3,7 @@ import { LengthInput } from '../ui/LengthInput'
 import { SizePreview } from '../ui/SizePreview'
 import { FontPicker } from '../ui/FontPicker'
 import { CollapsibleSection } from '../ui/CollapsibleSection'
+import { Checkbox } from '../ui/Checkbox'
 import { useLocalStorage } from '../../hooks/useLocalStorage'
 
 type Props = {
@@ -20,6 +21,8 @@ function setKey<T extends object, K extends keyof T>(obj: T, key: K, value: T[K]
 export function VisualEditor({ theme, onChange }: Props) {
   const [search, setSearch] = useLocalStorage<string>('td:editor-search', '')
   const matchesSearch = (text: string): boolean => !search || text.toLowerCase().includes(search)
+  const matchClass = (text: string): string =>
+    search && matchesSearch(text) ? 'editor-token--match' : ''
 
   const update = (mut: (t: Theme) => Theme) => onChange(mut(theme))
 
@@ -130,13 +133,19 @@ export function VisualEditor({ theme, onChange }: Props) {
         onChange={e => setSearch(e.target.value.toLowerCase())}
       />
 
+      <Checkbox
+        checked={theme.nightMode}
+        onChange={checked => update(t => ({ ...t, nightMode: checked }))}
+        label="Night mode (invert colors)"
+      />
+
       <div className={colorsVisible ? '' : 'editor-section--no-match'}>
         <CollapsibleSection title="Colors" persistKey="colors">
           <div className="ve-section">
             <h4 className="ve-section__title">Colors</h4>
             <div className="ve-grid">
               {Object.entries(theme.colors).map(([k, v]) => (
-                <label key={k} className="ve-color">
+                <label key={k} className={`ve-color ${matchClass(k)}`}>
                   <span className="ve-color__label">{k}</span>
                   <input type="color" value={v} onChange={e => updateColor(k as keyof Theme['colors'], e.target.value)} />
                 </label>
@@ -151,39 +160,39 @@ export function VisualEditor({ theme, onChange }: Props) {
           <div className="ve-section">
             <h4 className="ve-section__title">Hover & active colors</h4>
             <div className="ve-grid">
-              <label className="ve-color">
+              <label className={`ve-color ${matchClass('bgHover')}`}>
                 <span className="ve-color__label">bgHover</span>
                 <input type="color" value={theme.colors.bgHover} onChange={e => updateNewColor('bgHover', e.target.value)} />
               </label>
-              <label className="ve-color">
+              <label className={`ve-color ${matchClass('bgActive')}`}>
                 <span className="ve-color__label">bgActive</span>
                 <input type="color" value={theme.colors.bgActive} onChange={e => updateNewColor('bgActive', e.target.value)} />
               </label>
-              <label className="ve-color">
+              <label className={`ve-color ${matchClass('textInverse')}`}>
                 <span className="ve-color__label">textInverse</span>
                 <input type="color" value={theme.colors.textInverse} onChange={e => updateNewColor('textInverse', e.target.value)} />
               </label>
-              <label className="ve-color">
+              <label className={`ve-color ${matchClass('borderStrong')}`}>
                 <span className="ve-color__label">borderStrong</span>
                 <input type="color" value={theme.colors.borderStrong} onChange={e => updateNewColor('borderStrong', e.target.value)} />
               </label>
-              <label className="ve-color">
+              <label className={`ve-color ${matchClass('focusRing')}`}>
                 <span className="ve-color__label">focusRing</span>
                 <input type="color" value={theme.colors.focusRing} onChange={e => updateNewColor('focusRing', e.target.value)} />
               </label>
-              <label className="ve-color">
+              <label className={`ve-color ${matchClass('info')}`}>
                 <span className="ve-color__label">info</span>
                 <input type="color" value={theme.colors.info} onChange={e => updateNewColor('info', e.target.value)} />
               </label>
-              <label className="ve-color">
+              <label className={`ve-color ${matchClass('link')}`}>
                 <span className="ve-color__label">link</span>
                 <input type="color" value={theme.colors.link} onChange={e => updateNewColor('link', e.target.value)} />
               </label>
-              <label className="ve-color">
+              <label className={`ve-color ${matchClass('codeBg')}`}>
                 <span className="ve-color__label">codeBg</span>
                 <input type="color" value={theme.colors.codeBg} onChange={e => updateNewColor('codeBg', e.target.value)} />
               </label>
-              <label className="ve-color">
+              <label className={`ve-color ${matchClass('overlay')}`}>
                 <span className="ve-color__label">overlay</span>
                 <input type="color" value={theme.colors.overlay} onChange={e => updateNewColor('overlay', e.target.value)} />
               </label>
@@ -237,7 +246,7 @@ export function VisualEditor({ theme, onChange }: Props) {
             <h4 className="ve-section__title">Typography — weights</h4>
             <div className="ve-grid">
               {Object.entries(theme.typography.fontWeight).map(([k, v]) => (
-                <label key={k} className="ve-field">
+                <label key={k} className={`ve-field ${matchClass(k)}`}>
                   <span className="ve-field__label">{k}</span>
                   <select className="field__input" value={String(v)} onChange={e => updateFontWeight(k as keyof Theme['typography']['fontWeight'], Number(e.target.value))}>
                     {WEIGHT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
@@ -255,7 +264,7 @@ export function VisualEditor({ theme, onChange }: Props) {
             <h4 className="ve-section__title">Typography — line heights</h4>
             <div className="ve-grid">
               {Object.entries(theme.typography.lineHeight).map(([k, v]) => (
-                <label key={k} className="ve-field">
+                <label key={k} className={`ve-field ${matchClass(k)}`}>
                   <span className="ve-field__label">{k}</span>
                   <input type="number" step="0.1" min="0.5" max="3" className="field__input" value={v} onChange={e => updateLineHeight(k as keyof Theme['typography']['lineHeight'], Number(e.target.value))} />
                 </label>
@@ -311,7 +320,7 @@ export function VisualEditor({ theme, onChange }: Props) {
             <h4 className="ve-section__title">Shadows</h4>
             <div className="ve-stack">
               {Object.entries(theme.shadows).map(([k, v]) => (
-                <label key={k} className="ve-field">
+                <label key={k} className={`ve-field ${matchClass(k)}`}>
                   <span className="ve-field__label">{k}</span>
                   <input className="field__input" value={v} onChange={e => updateShadow(k as keyof Theme['shadows'], e.target.value)} />
                 </label>
@@ -326,27 +335,27 @@ export function VisualEditor({ theme, onChange }: Props) {
           <div className="ve-section">
             <h4 className="ve-section__title">Special shadows</h4>
             <div className="ve-stack">
-              <label className="ve-field">
+              <label className={`ve-field ${matchClass('button')}`}>
                 <span className="ve-field__label">button</span>
                 <input className="field__input" value={theme.shadows.button} onChange={e => updateNewShadow('button', e.target.value)} />
               </label>
-              <label className="ve-field">
+              <label className={`ve-field ${matchClass('input')}`}>
                 <span className="ve-field__label">input</span>
                 <input className="field__input" value={theme.shadows.input} onChange={e => updateNewShadow('input', e.target.value)} />
               </label>
-              <label className="ve-field">
+              <label className={`ve-field ${matchClass('card')}`}>
                 <span className="ve-field__label">card</span>
                 <input className="field__input" value={theme.shadows.card} onChange={e => updateNewShadow('card', e.target.value)} />
               </label>
-              <label className="ve-field">
+              <label className={`ve-field ${matchClass('focus')}`}>
                 <span className="ve-field__label">focus</span>
                 <input className="field__input" value={theme.shadows.focus} onChange={e => updateNewShadow('focus', e.target.value)} />
               </label>
-              <label className="ve-field">
+              <label className={`ve-field ${matchClass('inner')}`}>
                 <span className="ve-field__label">inner</span>
                 <input className="field__input" value={theme.shadows.inner} onChange={e => updateNewShadow('inner', e.target.value)} />
               </label>
-              <label className="ve-field">
+              <label className={`ve-field ${matchClass('glow')}`}>
                 <span className="ve-field__label">glow</span>
                 <input className="field__input" value={theme.shadows.glow} onChange={e => updateNewShadow('glow', e.target.value)} />
               </label>
@@ -368,7 +377,7 @@ export function VisualEditor({ theme, onChange }: Props) {
                 />
                 <SizePreview kind="spacing" value={theme.borders.width} />
               </div>
-              <label className="ve-field">
+              <label className={`ve-field ${matchClass('style')}`}>
                 <span className="ve-field__label">style</span>
                 <select className="field__input" value={theme.borders.style} onChange={e => updateBorders('style', e.target.value)}>
                   {BORDER_STYLE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
@@ -385,7 +394,7 @@ export function VisualEditor({ theme, onChange }: Props) {
             <h4 className="ve-section__title">Transitions</h4>
             <div className="ve-stack">
               {Object.entries(theme.transitions).map(([k, v]) => (
-                <label key={k} className="ve-field">
+                <label key={k} className={`ve-field ${matchClass(k)}`}>
                   <span className="ve-field__label">{k}</span>
                   <input className="field__input" value={v} onChange={e => updateTransition(k as keyof Theme['transitions'], e.target.value)} />
                 </label>
@@ -401,7 +410,7 @@ export function VisualEditor({ theme, onChange }: Props) {
             <h4 className="ve-section__title">Breakpoints</h4>
             <div className="ve-grid">
               {Object.entries(theme.breakpoints).map(([k, v]) => (
-                <label key={k} className="ve-field">
+                <label key={k} className={`ve-field ${matchClass(k)}`}>
                   <span className="ve-field__label">{k}</span>
                   <input
                     className="field__input"
