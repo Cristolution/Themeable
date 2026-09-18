@@ -24,6 +24,20 @@ const sections = [
       { label: 'Settings', to: '/settings' },
       { label: 'Help', to: '/help' }
     ]
+  },
+  {
+    label: 'Demos',
+    items: [
+      { label: 'Slides', to: '/demos/slides' },
+      { label: 'Chat', to: '/demos/chat' },
+      { label: 'Kanban', to: '/demos/kanban' },
+      { label: 'Gallery', to: '/demos/gallery' },
+      { label: 'Habits', to: '/demos/habits' },
+      { label: 'Finance', to: '/demos/finance' },
+      { label: 'Notes', to: '/demos/notes' },
+      { label: 'Quiz', to: '/demos/quiz' },
+      { label: 'Social', to: '/demos/social' }
+    ]
   }
 ]
 
