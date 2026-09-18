@@ -12,7 +12,7 @@ export function CollapsibleSection({ title, defaultOpen = true, persistKey, chil
   // Use persisted value when persistKey is set; otherwise use defaultOpen.
   const storage = useLocalStorage<boolean>(
     persistKey ? `td:collapsed:${persistKey}` : '__unused__',
-    !defaultOpen
+    defaultOpen
   )
   const isOpen = persistKey ? storage[0] : defaultOpen
 
