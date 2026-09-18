@@ -21,8 +21,10 @@ export function CollapsibleSection({ title, defaultOpen = true, persistKey, chil
       open={isOpen}
       onToggle={e => {
         if (persistKey) {
-          e.preventDefault()
-          storage[1](!storage[0])
+          const newOpen = e.currentTarget.open
+          if (newOpen !== storage[0]) {
+            storage[1](newOpen)
+          }
         }
       }}
       className="collapsible"
