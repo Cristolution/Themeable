@@ -33,6 +33,11 @@ import { FinancePage } from './pages/FinancePage'
 import { NotesPage } from './pages/NotesPage'
 import { QuizPage } from './pages/QuizPage'
 import { SocialPage } from './pages/SocialPage'
+import { LineChartPage } from './pages/LineChartPage'
+import { AreaChartPage } from './pages/AreaChartPage'
+import { PieChartPage } from './pages/PieChartPage'
+import { ScatterChartPage } from './pages/ScatterChartPage'
+import { RadarChartPage } from './pages/RadarChartPage'
 
 export default function App() {
   const { theme, setTheme, dirty, save, reset } = useTheme()
@@ -149,6 +154,11 @@ export default function App() {
             <Route path="/demos/notes" element={<NotesPage />} />
             <Route path="/demos/quiz" element={<QuizPage />} />
             <Route path="/demos/social" element={<SocialPage />} />
+            <Route path="/charts/line" element={<LineChartPage />} />
+            <Route path="/charts/area" element={<AreaChartPage />} />
+            <Route path="/charts/pie" element={<PieChartPage />} />
+            <Route path="/charts/scatter" element={<ScatterChartPage />} />
+            <Route path="/charts/radar" element={<RadarChartPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>

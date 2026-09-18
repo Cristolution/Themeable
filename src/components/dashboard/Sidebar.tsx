@@ -38,6 +38,16 @@ const sections = [
       { label: 'Quiz', to: '/demos/quiz' },
       { label: 'Social', to: '/demos/social' }
     ]
+  },
+  {
+    label: 'Charts',
+    items: [
+      { label: 'Line', to: '/charts/line' },
+      { label: 'Area', to: '/charts/area' },
+      { label: 'Pie', to: '/charts/pie' },
+      { label: 'Scatter', to: '/charts/scatter' },
+      { label: 'Radar', to: '/charts/radar' }
+    ]
   }
 ]
 
