@@ -19,6 +19,9 @@ Open `http://localhost:5173/`.
 - **Save / Reset** — themes persist across reloads via `localStorage`
 - **Import / Export** — share themes as `.json` files
 - **Navigate 8 pages** — Dashboard, Activity, Calendar, Projects, Tasks, Files, Profile, Settings, Help (plus a NotFound catch-all)
+- **Toggle night mode** — flip a single theme field and the whole UI inverts via CSS filter
+- **Browse 9 demo pages** — Slides, Chat, Kanban, Gallery, Habits, Finance, Notes, Quiz, Social under `/demos/*`
+- **Collapse and search the editor** — visual editor sections fold/unfold and filter by token name (persists in `localStorage`)
 
 ## What's new
 
@@ -38,6 +41,14 @@ Open `http://localhost:5173/`.
 - **Responsive editor panel** — the editor slides up as a bottom sheet at tablet widths and goes full-screen on mobile, with the visual / JSON tab strip pinned to the top.
 - **Responsive dashboards** — dashboard grids, stat cards, and feature cards reflow across `sm` / `md` / `lg` breakpoints.
 - **RTL via logical CSS properties** — `base.css` was rewritten to use `margin-inline-*`, `padding-inline-*`, `border-inline-start` / `border-inline-end`, `inset-inline-*`, and friends. All components honor the active `direction` automatically with no per-component branching.
+
+## What's new in v4
+
+- **`nightMode: boolean` theme field** — every `Theme` now carries a `nightMode` flag. When `applyTheme` runs, it sets `document.documentElement.style.filter` to `invert(1) hue-rotate(180deg)` while the flag is on (and clears it otherwise), giving the entire UI a one-click dark mode without re-tokening. `validateTheme` requires the field, all four built-in presets include it, and the visual editor exposes a dedicated toggle.
+- **9 new demo pages** — `Slides`, `Chat`, `Kanban`, `Gallery`, `Habits`, `Finance`, `Notes`, `Quiz`, `Social` are wired through React Router under `/demos/slides`, `/demos/chat`, `/demos/kanban`, `/demos/gallery`, `/demos/habits`, `/demos/finance`, `/demos/notes`, `/demos/quiz`, and `/demos/social`. Each demo uses real `var(--*)` tokens so it re-themes live when the theme changes.
+- **Sidebar reorganized with a "Demos" section** — the sidebar now groups the 9 new demo routes under their own `Demos` heading so they're easy to find alongside the regular navigation.
+- **`CollapsibleSection` + `useLocalStorage` for the editor** — the `VisualEditor` is now collapsible (sections can be folded/unfolded) and ships with a search field that filters tokens by name. Open/closed state for each section and the search query are persisted to `localStorage` via a new `useLocalStorage` hook so the editor looks the same across reloads.
+- **`.gitignore` updated for build artifacts** — `dist`, `dist-ssr`, `*.tsbuildinfo`, the compiled `vite.config.js` / `vite.config.d.ts`, and `vitest.config.js` / `vitest.config.d.ts` are now ignored so a clean `npm run build` leaves the working tree clean.
 
 ## Project structure
 
