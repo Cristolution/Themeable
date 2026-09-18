@@ -398,6 +398,7 @@
 .editor-panel__body {
   flex: 1;
   overflow-y: auto;
+  overflow-x: auto;
   padding: var(--space-lg);
 }
 
@@ -1469,4 +1470,42 @@ input[type="number"] {
 .editor-panel {
   min-width: 0;
   overflow-x: hidden;
+}
+
+/* ===== Shadow row (4 sub-inputs) ===== */
+
+.ve-shadow-row {
+  display: grid;
+  grid-template-columns: 60px repeat(3, 1fr) 36px auto;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) 0;
+  border-bottom: var(--border-width) var(--border-style) var(--color-border);
+  min-width: 0;
+}
+
+.ve-shadow-row > * {
+  min-width: 0;
+}
+
+.ve-shadow-row .ve-field__label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.ve-shadow-row input.field__input {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  padding: var(--space-xs) var(--space-sm);
+}
+
+.ve-shadow-row input.shadow-color {
+  width: 36px;
+  height: 28px;
+  padding: 0;
+  border: var(--border-width) var(--border-style) var(--color-border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
 }

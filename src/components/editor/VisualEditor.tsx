@@ -18,6 +18,49 @@ function setKey<T extends object, K extends keyof T>(obj: T, key: K, value: T[K]
   return { ...obj, [key]: value }
 }
 
+type ShadowParts = { x: string; y: string; blur: string; color: string }
+
+function parseShadow(value: string): ShadowParts {
+  if (!value || value === 'none') return { x: '', y: '', blur: '', color: '' }
+  const colorMatch = value.match(/(rgba?\([^)]+\)|#[0-9a-fA-F]{3,8}|transparent)/)
+  const color = colorMatch ? colorMatch[0] : ''
+  const withoutColor = color ? value.replace(color, '').trim() : value.trim()
+  const lengths = withoutColor.match(/(-?\d*\.?\d+(?:px|rem|em|%)?)/g) || []
+  return {
+    x: lengths[0] || '',
+    y: lengths[1] || '',
+    blur: lengths[2] || '',
+    color
+  }
+}
+
+function serializeShadow(x: string, y: string, blur: string, color: string): string {
+  if (!x && !y && !blur && !color) return 'none'
+  const xi = x || '0'
+  const yi = y || '0'
+  const bi = blur || '0'
+  const ci = color || 'rgba(0,0,0,0.25)'
+  return `${xi} ${yi} ${bi} ${ci}`
+}
+
+function normalizeHex(value: string): string {
+  if (!value) return '#000000'
+  const trimmed = value.trim()
+  if (/^#[0-9a-fA-F]{6}$/.test(trimmed)) return trimmed.toLowerCase()
+  if (/^#[0-9a-fA-F]{3}$/.test(trimmed)) {
+    return ('#' + trimmed.slice(1).split('').map(c => c + c).join('')).toLowerCase()
+  }
+  if (/^#[0-9a-fA-F]{8}$/.test(trimmed)) return trimmed.slice(0, 7).toLowerCase()
+  const rgbaMatch = trimmed.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/)
+  if (rgbaMatch) {
+    const r = parseInt(rgbaMatch[1], 10).toString(16).padStart(2, '0')
+    const g = parseInt(rgbaMatch[2], 10).toString(16).padStart(2, '0')
+    const b = parseInt(rgbaMatch[3], 10).toString(16).padStart(2, '0')
+    return `#${r}${g}${b}`
+  }
+  return '#000000'
+}
+
 export function VisualEditor({ theme, onChange }: Props) {
   const [search, setSearch] = useLocalStorage<string>('td:editor-search', '')
   const matchesSearch = (text: string): boolean => !search || text.toLowerCase().includes(search)
@@ -47,14 +90,14 @@ export function VisualEditor({ theme, onChange }: Props) {
   const updateRadius = (key: keyof Theme['radius'], value: string) =>
     update(t => ({ ...t, radius: { ...t.radius, [key]: value } }))
 
-  const updateShadow = (key: keyof Theme['shadows'], value: string) =>
-    update(t => ({ ...t, shadows: { ...t.shadows, [key]: value } }))
-
   const updateNewColor = (key: keyof Theme['colors'], value: string) =>
     update(t => ({ ...t, colors: { ...t.colors, [key]: value } }))
 
-  const updateNewShadow = (key: keyof Theme['shadows'], value: string) =>
-    update(t => ({ ...t, shadows: { ...t.shadows, [key]: value } }))
+  const updateShadowParts = (key: keyof Theme['shadows'], part: 'x' | 'y' | 'blur' | 'color', value: string) => {
+    const current = parseShadow(theme.shadows[key])
+    const next = { ...current, [part]: value }
+    update(t => ({ ...t, shadows: { ...t.shadows, [key]: serializeShadow(next.x, next.y, next.blur, next.color) } }))
+  }
 
   const updateBreakpoint = (key: keyof Theme['breakpoints'], value: string) =>
     update(t => ({ ...t, breakpoints: { ...t.breakpoints, [key]: value } }))
@@ -319,12 +362,40 @@ export function VisualEditor({ theme, onChange }: Props) {
           <div className="ve-section">
             <h4 className="ve-section__title">Shadows</h4>
             <div className="ve-stack">
-              {Object.entries(theme.shadows).map(([k, v]) => (
-                <label key={k} className={`ve-field ${matchClass(k)}`}>
-                  <span className="ve-field__label">{k}</span>
-                  <input className="field__input" value={v} onChange={e => updateShadow(k as keyof Theme['shadows'], e.target.value)} />
-                </label>
-              ))}
+              {Object.entries(theme.shadows).map(([k, v]) => {
+                const parts = parseShadow(v)
+                return (
+                  <div key={k} className={`ve-shadow-row ${matchClass(k)}`}>
+                    <span className="ve-field__label">{k}</span>
+                    <input
+                      className="field__input"
+                      placeholder="x"
+                      value={parts.x}
+                      onChange={e => updateShadowParts(k as keyof Theme['shadows'], 'x', e.target.value)}
+                    />
+                    <input
+                      className="field__input"
+                      placeholder="y"
+                      value={parts.y}
+                      onChange={e => updateShadowParts(k as keyof Theme['shadows'], 'y', e.target.value)}
+                    />
+                    <input
+                      className="field__input"
+                      placeholder="blur"
+                      value={parts.blur}
+                      onChange={e => updateShadowParts(k as keyof Theme['shadows'], 'blur', e.target.value)}
+                    />
+                    <input
+                      type="color"
+                      className="shadow-color"
+                      value={normalizeHex(parts.color)}
+                      onChange={e => updateShadowParts(k as keyof Theme['shadows'], 'color', e.target.value)}
+                      aria-label={`${k} color`}
+                    />
+                    <SizePreview kind="spacing" value={v} />
+                  </div>
+                )
+              })}
             </div>
           </div>
         </CollapsibleSection>
@@ -335,30 +406,41 @@ export function VisualEditor({ theme, onChange }: Props) {
           <div className="ve-section">
             <h4 className="ve-section__title">Special shadows</h4>
             <div className="ve-stack">
-              <label className={`ve-field ${matchClass('button')}`}>
-                <span className="ve-field__label">button</span>
-                <input className="field__input" value={theme.shadows.button} onChange={e => updateNewShadow('button', e.target.value)} />
-              </label>
-              <label className={`ve-field ${matchClass('input')}`}>
-                <span className="ve-field__label">input</span>
-                <input className="field__input" value={theme.shadows.input} onChange={e => updateNewShadow('input', e.target.value)} />
-              </label>
-              <label className={`ve-field ${matchClass('card')}`}>
-                <span className="ve-field__label">card</span>
-                <input className="field__input" value={theme.shadows.card} onChange={e => updateNewShadow('card', e.target.value)} />
-              </label>
-              <label className={`ve-field ${matchClass('focus')}`}>
-                <span className="ve-field__label">focus</span>
-                <input className="field__input" value={theme.shadows.focus} onChange={e => updateNewShadow('focus', e.target.value)} />
-              </label>
-              <label className={`ve-field ${matchClass('inner')}`}>
-                <span className="ve-field__label">inner</span>
-                <input className="field__input" value={theme.shadows.inner} onChange={e => updateNewShadow('inner', e.target.value)} />
-              </label>
-              <label className={`ve-field ${matchClass('glow')}`}>
-                <span className="ve-field__label">glow</span>
-                <input className="field__input" value={theme.shadows.glow} onChange={e => updateNewShadow('glow', e.target.value)} />
-              </label>
+              {(['button', 'input', 'card', 'focus', 'inner', 'glow'] as Array<keyof Theme['shadows']>).map(k => {
+                const v = theme.shadows[k]
+                const parts = parseShadow(v)
+                return (
+                  <div key={k} className={`ve-shadow-row ${matchClass(k)}`}>
+                    <span className="ve-field__label">{k}</span>
+                    <input
+                      className="field__input"
+                      placeholder="x"
+                      value={parts.x}
+                      onChange={e => updateShadowParts(k, 'x', e.target.value)}
+                    />
+                    <input
+                      className="field__input"
+                      placeholder="y"
+                      value={parts.y}
+                      onChange={e => updateShadowParts(k, 'y', e.target.value)}
+                    />
+                    <input
+                      className="field__input"
+                      placeholder="blur"
+                      value={parts.blur}
+                      onChange={e => updateShadowParts(k, 'blur', e.target.value)}
+                    />
+                    <input
+                      type="color"
+                      className="shadow-color"
+                      value={normalizeHex(parts.color)}
+                      onChange={e => updateShadowParts(k, 'color', e.target.value)}
+                      aria-label={`${k} color`}
+                    />
+                    <SizePreview kind="spacing" value={v} />
+                  </div>
+                )
+              })}
             </div>
           </div>
         </CollapsibleSection>
