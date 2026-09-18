@@ -1414,3 +1414,59 @@
   padding: 0;
 }
 .social-post__action:hover { color: var(--color-text); }
+
+/* ===== Editor overflow fixes ===== */
+
+.field__input,
+input[type="number"],
+input[type="text"],
+input[type="search"],
+select,
+.font-picker__select,
+.font-picker__input,
+.notes-list__item {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Allow flex/grid children to shrink past content size */
+.ve-length-row > *,
+.ve-field > *,
+.ve-color > *,
+.font-picker__row > *,
+.notes-editor,
+.ve-grid,
+.ve-grid > * {
+  min-width: 0;
+}
+
+/* 2-column grid columns must be allowed to shrink below min-content */
+.ve-grid {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+/* Inputs inside grid/flex columns should fill their column */
+.ve-grid .field__input,
+.ve-grid input[type="text"],
+.ve-grid input[type="number"],
+.ve-grid select {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Number input should not be wider than its parent */
+input[type="number"] {
+  width: 100%;
+}
+
+/* Search field should not overflow */
+.editor-search {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Defensive: prevent any leakage from the editor panel itself */
+.editor-panel {
+  min-width: 0;
+  overflow-x: hidden;
+}
