@@ -12,3 +12,12 @@ vite.config.js
 vite.config.d.ts
 vitest.config.js
 vitest.config.d.ts
+
+# Verification artifacts — never commit
+docs/superpowers/specs/*.md
+docs/superpowers/plans/*.md
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
