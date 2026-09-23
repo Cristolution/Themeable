@@ -1,3 +1,6 @@
+import { NumberInput } from './NumberInput'
+import { Menu, MenuTrigger, MenuPanel, MenuItem } from './Menu'
+
 type Props = {
   value: string
   onChange: (newValue: string) => void
@@ -28,20 +31,28 @@ export function LengthInput({ value, onChange, label }: Props) {
     <div className="length-input">
       {label && <span className="length-input__label">{label}</span>}
       <div className="length-input__row">
-        <input
-          type="number"
-          className="field__input length-input__num"
+        <NumberInput
+          className="length-input__num"
           value={num}
-          step="0.1"
-          onChange={e => updateNum(parseFloat(e.target.value) || 0)}
+          step={0.1}
+          onChange={updateNum}
+          aria-label="length value"
         />
-        <select
-          className="field__input length-input__unit"
-          value={unit}
-          onChange={e => updateUnit(e.target.value)}
-        >
-          {UNITS.map(u => <option key={u} value={u}>{u}</option>)}
-        </select>
+        <Menu>
+          <MenuTrigger className="length-input__unit" aria-label="length unit">{unit} ▾</MenuTrigger>
+          <MenuPanel>
+            {UNITS.map(u => (
+              <MenuItem
+                key={u}
+                value={u}
+                active={u === unit}
+                onSelect={updateUnit}
+              >
+                {u}
+              </MenuItem>
+            ))}
+          </MenuPanel>
+        </Menu>
       </div>
     </div>
   )

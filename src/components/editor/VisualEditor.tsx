@@ -1,7 +1,10 @@
 import type { Theme } from '../../theme/schema'
 import { LengthInput } from '../ui/LengthInput'
+import { NumberInput } from '../ui/NumberInput'
+import { ShadowField } from '../ui/ShadowField'
 import { SizePreview } from '../ui/SizePreview'
 import { FontPicker } from '../ui/FontPicker'
+import { Menu, MenuTrigger, MenuPanel, MenuItem } from '../ui/Menu'
 import { CollapsibleSection } from '../ui/CollapsibleSection'
 import { Checkbox } from '../ui/Checkbox'
 import { useLocalStorage } from '../../hooks/useLocalStorage'
@@ -11,54 +14,16 @@ type Props = {
   onChange: (next: Theme) => void
 }
 
-const WEIGHT_OPTIONS = [100, 200, 300, 400, 500, 600, 700, 800, 900].map(w => ({ value: String(w), label: String(w) }))
-const BORDER_STYLE_OPTIONS = ['solid', 'dashed', 'dotted', 'none'].map(s => ({ value: s, label: s }))
+const WEIGHT_OPTIONS = [100, 200, 300, 400, 500, 600, 700, 800, 900].map(w => ({ value: w, label: String(w) }))
+const BORDER_STYLE_OPTIONS = [
+  { value: 'solid', label: 'solid' },
+  { value: 'dashed', label: 'dashed' },
+  { value: 'dotted', label: 'dotted' },
+  { value: 'none', label: 'none' },
+]
 
 function setKey<T extends object, K extends keyof T>(obj: T, key: K, value: T[K]): T {
   return { ...obj, [key]: value }
-}
-
-type ShadowParts = { x: string; y: string; blur: string; color: string }
-
-function parseShadow(value: string): ShadowParts {
-  if (!value || value === 'none') return { x: '', y: '', blur: '', color: '' }
-  const colorMatch = value.match(/(rgba?\([^)]+\)|#[0-9a-fA-F]{3,8}|transparent)/)
-  const color = colorMatch ? colorMatch[0] : ''
-  const withoutColor = color ? value.replace(color, '').trim() : value.trim()
-  const lengths = withoutColor.match(/(-?\d*\.?\d+(?:px|rem|em|%)?)/g) || []
-  return {
-    x: lengths[0] || '',
-    y: lengths[1] || '',
-    blur: lengths[2] || '',
-    color
-  }
-}
-
-function serializeShadow(x: string, y: string, blur: string, color: string): string {
-  if (!x && !y && !blur && !color) return 'none'
-  const xi = x || '0'
-  const yi = y || '0'
-  const bi = blur || '0'
-  const ci = color || 'rgba(0,0,0,0.25)'
-  return `${xi} ${yi} ${bi} ${ci}`
-}
-
-function normalizeHex(value: string): string {
-  if (!value) return '#000000'
-  const trimmed = value.trim()
-  if (/^#[0-9a-fA-F]{6}$/.test(trimmed)) return trimmed.toLowerCase()
-  if (/^#[0-9a-fA-F]{3}$/.test(trimmed)) {
-    return ('#' + trimmed.slice(1).split('').map(c => c + c).join('')).toLowerCase()
-  }
-  if (/^#[0-9a-fA-F]{8}$/.test(trimmed)) return trimmed.slice(0, 7).toLowerCase()
-  const rgbaMatch = trimmed.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/)
-  if (rgbaMatch) {
-    const r = parseInt(rgbaMatch[1], 10).toString(16).padStart(2, '0')
-    const g = parseInt(rgbaMatch[2], 10).toString(16).padStart(2, '0')
-    const b = parseInt(rgbaMatch[3], 10).toString(16).padStart(2, '0')
-    return `#${r}${g}${b}`
-  }
-  return '#000000'
 }
 
 export function VisualEditor({ theme, onChange }: Props) {
@@ -93,10 +58,8 @@ export function VisualEditor({ theme, onChange }: Props) {
   const updateNewColor = (key: keyof Theme['colors'], value: string) =>
     update(t => ({ ...t, colors: { ...t.colors, [key]: value } }))
 
-  const updateShadowParts = (key: keyof Theme['shadows'], part: 'x' | 'y' | 'blur' | 'color', value: string) => {
-    const current = parseShadow(theme.shadows[key])
-    const next = { ...current, [part]: value }
-    update(t => ({ ...t, shadows: { ...t.shadows, [key]: serializeShadow(next.x, next.y, next.blur, next.color) } }))
+  const updateShadow = (key: keyof Theme['shadows'], value: string) => {
+    update(t => ({ ...t, shadows: { ...t.shadows, [key]: value } }))
   }
 
   const updateBreakpoint = (key: keyof Theme['breakpoints'], value: string) =>
@@ -291,9 +254,23 @@ export function VisualEditor({ theme, onChange }: Props) {
               {Object.entries(theme.typography.fontWeight).map(([k, v]) => (
                 <label key={k} className={`ve-field ${matchClass(k)}`}>
                   <span className="ve-field__label">{k}</span>
-                  <select className="field__input" value={String(v)} onChange={e => updateFontWeight(k as keyof Theme['typography']['fontWeight'], Number(e.target.value))}>
-                    {WEIGHT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-                  </select>
+                  <Menu>
+                    <MenuTrigger className="ve-field__select" aria-label={`${k} font weight`}>
+                      {v} ▾
+                    </MenuTrigger>
+                    <MenuPanel>
+                      {WEIGHT_OPTIONS.map(o => (
+                        <MenuItem
+                          key={o.value}
+                          value={o.value}
+                          active={o.value === v}
+                          onSelect={n => updateFontWeight(k as keyof Theme['typography']['fontWeight'], n as number)}
+                        >
+                          {o.label}
+                        </MenuItem>
+                      ))}
+                    </MenuPanel>
+                  </Menu>
                 </label>
               ))}
             </div>
@@ -309,7 +286,15 @@ export function VisualEditor({ theme, onChange }: Props) {
               {Object.entries(theme.typography.lineHeight).map(([k, v]) => (
                 <label key={k} className={`ve-field ${matchClass(k)}`}>
                   <span className="ve-field__label">{k}</span>
-                  <input type="number" step="0.1" min="0.5" max="3" className="field__input" value={v} onChange={e => updateLineHeight(k as keyof Theme['typography']['lineHeight'], Number(e.target.value))} />
+                  <NumberInput
+                    className="ve-field__num"
+                    step={0.1}
+                    min={0.5}
+                    max={3}
+                    value={v}
+                    onChange={n => updateLineHeight(k as keyof Theme['typography']['lineHeight'], n)}
+                    aria-label={`line-height ${k}`}
+                  />
                 </label>
               ))}
             </div>
@@ -362,40 +347,13 @@ export function VisualEditor({ theme, onChange }: Props) {
           <div className="ve-section">
             <h4 className="ve-section__title">Shadows</h4>
             <div className="ve-stack">
-              {Object.entries(theme.shadows).map(([k, v]) => {
-                const parts = parseShadow(v)
-                return (
-                  <div key={k} className={`ve-shadow-row ${matchClass(k)}`}>
-                    <span className="ve-field__label">{k}</span>
-                    <input
-                      className="field__input"
-                      placeholder="x"
-                      value={parts.x}
-                      onChange={e => updateShadowParts(k as keyof Theme['shadows'], 'x', e.target.value)}
-                    />
-                    <input
-                      className="field__input"
-                      placeholder="y"
-                      value={parts.y}
-                      onChange={e => updateShadowParts(k as keyof Theme['shadows'], 'y', e.target.value)}
-                    />
-                    <input
-                      className="field__input"
-                      placeholder="blur"
-                      value={parts.blur}
-                      onChange={e => updateShadowParts(k as keyof Theme['shadows'], 'blur', e.target.value)}
-                    />
-                    <input
-                      type="color"
-                      className="shadow-color"
-                      value={normalizeHex(parts.color)}
-                      onChange={e => updateShadowParts(k as keyof Theme['shadows'], 'color', e.target.value)}
-                      aria-label={`${k} color`}
-                    />
-                    <SizePreview kind="spacing" value={v} />
-                  </div>
-                )
-              })}
+              {Object.entries(theme.shadows).map(([k, v]) => (
+                <div key={k} className={`ve-shadow-row-wrap ${matchClass(k)}`}>
+                  <span className="ve-field__label">{k}</span>
+                  <ShadowField value={v} onChange={next => updateShadow(k as keyof Theme['shadows'], next)} />
+                  <SizePreview kind="spacing" value={v} />
+                </div>
+              ))}
             </div>
           </div>
         </CollapsibleSection>
@@ -408,35 +366,10 @@ export function VisualEditor({ theme, onChange }: Props) {
             <div className="ve-stack">
               {(['button', 'input', 'card', 'focus', 'inner', 'glow'] as Array<keyof Theme['shadows']>).map(k => {
                 const v = theme.shadows[k]
-                const parts = parseShadow(v)
                 return (
-                  <div key={k} className={`ve-shadow-row ${matchClass(k)}`}>
+                  <div key={k} className={`ve-shadow-row-wrap ${matchClass(k)}`}>
                     <span className="ve-field__label">{k}</span>
-                    <input
-                      className="field__input"
-                      placeholder="x"
-                      value={parts.x}
-                      onChange={e => updateShadowParts(k, 'x', e.target.value)}
-                    />
-                    <input
-                      className="field__input"
-                      placeholder="y"
-                      value={parts.y}
-                      onChange={e => updateShadowParts(k, 'y', e.target.value)}
-                    />
-                    <input
-                      className="field__input"
-                      placeholder="blur"
-                      value={parts.blur}
-                      onChange={e => updateShadowParts(k, 'blur', e.target.value)}
-                    />
-                    <input
-                      type="color"
-                      className="shadow-color"
-                      value={normalizeHex(parts.color)}
-                      onChange={e => updateShadowParts(k, 'color', e.target.value)}
-                      aria-label={`${k} color`}
-                    />
+                    <ShadowField value={v} onChange={next => updateShadow(k, next)} />
                     <SizePreview kind="spacing" value={v} />
                   </div>
                 )
@@ -461,9 +394,23 @@ export function VisualEditor({ theme, onChange }: Props) {
               </div>
               <label className={`ve-field ${matchClass('style')}`}>
                 <span className="ve-field__label">style</span>
-                <select className="field__input" value={theme.borders.style} onChange={e => updateBorders('style', e.target.value)}>
-                  {BORDER_STYLE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-                </select>
+                <Menu>
+                  <MenuTrigger className="ve-field__select" aria-label="border style">
+                    {theme.borders.style} ▾
+                  </MenuTrigger>
+                  <MenuPanel>
+                    {BORDER_STYLE_OPTIONS.map(o => (
+                      <MenuItem
+                        key={o.value}
+                        value={o.value}
+                        active={o.value === theme.borders.style}
+                        onSelect={v => updateBorders('style', v as string)}
+                      >
+                        {o.label}
+                      </MenuItem>
+                    ))}
+                  </MenuPanel>
+                </Menu>
               </label>
             </div>
           </div>
@@ -491,16 +438,24 @@ export function VisualEditor({ theme, onChange }: Props) {
           <div className="ve-section">
             <h4 className="ve-section__title">Breakpoints</h4>
             <div className="ve-grid">
-              {Object.entries(theme.breakpoints).map(([k, v]) => (
-                <label key={k} className={`ve-field ${matchClass(k)}`}>
-                  <span className="ve-field__label">{k}</span>
-                  <input
-                    className="field__input"
-                    value={v}
-                    onChange={e => updateBreakpoint(k as keyof Theme['breakpoints'], e.target.value)}
-                  />
-                </label>
-              ))}
+              {Object.entries(theme.breakpoints).map(([k, v]) => {
+                // Breakpoints are CSS lengths (e.g. "768px") — re-use LengthInput so they
+                // get the up/down spinner on the numeric part plus unit selector.
+                const numericValue = parseFloat(v)
+                return (
+                  <label key={k} className={`ve-field ${matchClass(k)}`}>
+                    <span className="ve-field__label">{k}</span>
+                    <NumberInput
+                      className="ve-field__num"
+                      step={1}
+                      min={0}
+                      value={Number.isFinite(numericValue) ? numericValue : 0}
+                      onChange={n => updateBreakpoint(k as keyof Theme['breakpoints'], `${n}px`)}
+                      aria-label={`breakpoint ${k}`}
+                    />
+                  </label>
+                )
+              })}
             </div>
           </div>
         </CollapsibleSection>
