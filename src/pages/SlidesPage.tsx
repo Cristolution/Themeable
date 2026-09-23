@@ -36,8 +36,8 @@ export function SlidesPage() {
         </div>
       </div>
       <Card>
-        <div style={{ minHeight: 320, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 'var(--space-md)', padding: 'var(--space-xl)', textAlign: 'center' }}>
-          <h1 style={{ fontSize: 'var(--font-size-2xl)' }}>{slideTitles[index]}</h1>
+        <div className="slide-card">
+          <h1 className="slide-card__title">{slideTitles[index]}</h1>
           <p style={{ color: 'var(--color-text-muted)', maxWidth: 480 }}>
             {theme.name} theme is active. Use ← → to navigate.
           </p>

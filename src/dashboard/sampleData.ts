@@ -74,9 +74,9 @@ export type Feature = {
 }
 
 export const featureCards: Feature[] = [
-  { id: 'f1', icon: '⚡', title: 'Live Preview',  description: 'Every theme edit updates the dashboard in real time.' },
-  { id: 'f2', icon: '📦', title: 'JSON Export',   description: 'Save and share themes as plain JSON files.' },
-  { id: 'f3', icon: '🎨', title: 'Custom CSS',    description: 'Drop in raw CSS for advanced overrides.' }
+  { id: 'f1', icon: 'bolt', title: 'Live Preview',  description: 'Every theme edit updates the dashboard in real time.' },
+  { id: 'f2', icon: 'box',  title: 'JSON Export',   description: 'Save and share themes as plain JSON files.' },
+  { id: 'f3', icon: 'palette', title: 'Custom CSS', description: 'Drop in raw CSS for advanced overrides.' }
 ]
 
 export const activityFilters = [
@@ -112,14 +112,14 @@ export const projects = [
 ] as const
 
 export const tasks = [
-  { id: 't1', title: 'Wire up sitemap',     priority: 'high',   assignee: 'AK', column: 'todo' },
-  { id: 't2', title: 'Define color tokens', priority: 'medium', assignee: 'PS', column: 'todo' },
-  { id: 't3', title: 'Update chart colors', priority: 'low',    assignee: 'DL', column: 'todo' },
-  { id: 't4', title: 'Add profile API',     priority: 'high',   assignee: 'DL', column: 'progress' },
-  { id: 't5', title: 'Refactor editor',     priority: 'medium', assignee: 'AK', column: 'progress' },
-  { id: 't6', title: 'Write docs',          priority: 'low',    assignee: 'PS', column: 'progress' },
-  { id: 't7', title: 'Deploy v2.1',         priority: 'high',   assignee: 'MC', column: 'done' },
-  { id: 't8', title: 'Update changelog',    priority: 'low',    assignee: 'SP', column: 'done' }
+  { id: 't1', title: 'Wire up sitemap',         priority: 'high',   assignee: 'AK', column: 'todo',     due: 'Today',     subtasks: 3, status: 'At risk' },
+  { id: 't2', title: 'Define color tokens',     priority: 'medium', assignee: 'PS', column: 'todo',     due: 'Tomorrow',  subtasks: 5, status: 'On track' },
+  { id: 't3', title: 'Update chart colors',     priority: 'low',    assignee: 'DL', column: 'todo',     due: 'Sep 28',    subtasks: 2, status: 'On track' },
+  { id: 't4', title: 'Add profile API',         priority: 'high',   assignee: 'DL', column: 'progress', due: 'Today',     subtasks: 4, status: 'Blocked' },
+  { id: 't5', title: 'Refactor editor',         priority: 'medium', assignee: 'AK', column: 'progress', due: 'Sep 25',    subtasks: 6, status: 'On track' },
+  { id: 't6', title: 'Write docs',              priority: 'low',    assignee: 'PS', column: 'progress', due: 'Oct 02',    subtasks: 8, status: 'On track' },
+  { id: 't7', title: 'Deploy v2.1',             priority: 'high',   assignee: 'MC', column: 'done',     due: 'Sep 18',    subtasks: 4, status: 'Shipped' },
+  { id: 't8', title: 'Update changelog',        priority: 'low',    assignee: 'SP', column: 'done',     due: 'Sep 17',    subtasks: 1, status: 'Shipped' }
 ] as const
 
 export const files = [

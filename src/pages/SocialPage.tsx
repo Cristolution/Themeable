@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Card } from '../components/ui/Card'
 import { Button } from '../components/ui/Button'
+import { HeartIcon, CommentIcon, ShareIcon } from '../components/ui/Icon'
 
 type Post = { id: string; user: string; initials: string; time: string; content: string; likes: number; comments: number }
 
@@ -54,9 +55,15 @@ export function SocialPage() {
                   </div>
                   <p style={{ margin: 'var(--space-md) 0' }}>{p.content}</p>
                   <div className="social-post__actions">
-                    <button onClick={() => like(p.id)} className="social-post__action">♥ {p.likes}</button>
-                    <span className="social-post__action">💬 {p.comments}</span>
-                    <span className="social-post__action">↗ Share</span>
+                    <button onClick={() => like(p.id)} className="social-post__action">
+                      <HeartIcon size={16} /> {p.likes}
+                    </button>
+                    <span className="social-post__action">
+                      <CommentIcon size={16} /> {p.comments}
+                    </span>
+                    <span className="social-post__action">
+                      <ShareIcon size={16} /> Share
+                    </span>
                   </div>
                 </div>
               </Card>

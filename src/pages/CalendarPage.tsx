@@ -15,7 +15,7 @@ export function CalendarPage() {
         <h2>Calendar</h2>
         <Button onClick={() => setOpen(true)}>+ Add event</Button>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-md)' }}>
+      <div className="calendar-page-grid">
         <CalendarWidget />
         <Card title="Upcoming events">
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>

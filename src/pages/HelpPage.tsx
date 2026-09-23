@@ -9,7 +9,7 @@ export function HelpPage() {
   return (
     <>
       <h2 style={{ marginBottom: 'var(--space-lg)' }}>Help</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 'var(--space-md)' }}>
+      <div className="help-page-grid">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
           <Card title="Frequently asked questions">
             <div style={{ display: 'flex', flexDirection: 'column' }}>

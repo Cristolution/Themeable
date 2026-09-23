@@ -11,7 +11,7 @@ export function ProfilePage() {
   return (
     <>
       <h2 style={{ marginBottom: 'var(--space-lg)' }}>Profile</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 'var(--space-md)' }}>
+      <div className="profile-page-grid">
         <Card>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--space-md)' }}>
             <div style={{

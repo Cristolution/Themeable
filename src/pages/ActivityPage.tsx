@@ -23,7 +23,7 @@ export function ActivityPage() {
           </Button>
         ))}
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 'var(--space-md)' }}>
+      <div className="activity-page-grid">
         <Card title="Recent Activity">
           <ul className="activity">
             {allEntries.map(e => (
