@@ -157,6 +157,8 @@
   flex: 1;
   padding: var(--space-lg);
   overflow-y: auto;
+  container-type: inline-size;
+  container-name: app-main;
 }
 
 .nav {
@@ -623,7 +625,15 @@
 .menu__item {
   width: 100%;
   text-align: left;
+  /* Dropdown items render borderless / backgroundless — the panel itself
+     carries the surface treatment. Higher specificity than .preset-chip so
+     the PresetGallery chips (which use .preset-chip directly) keep their
+     pill styling. */
+  background: transparent;
+  border-color: transparent;
 }
+
+.menu__item:hover { background: var(--color-bg-subtle); }
 
 .menu__item--disabled {
   opacity: 0.5;
@@ -632,7 +642,8 @@
 
 .menu__item:focus-visible {
   outline: none;
-  border-color: var(--color-accent);
+  border-color: transparent;
+  background: var(--color-bg-subtle);
 }
 
 .import-export { display: flex; gap: var(--space-sm); align-items: center; }
@@ -669,7 +680,6 @@
   .form-activity-row { grid-template-columns: 1fr 1fr; }
   .projects-grid { grid-template-columns: repeat(2, 1fr); }
   .files-grid { grid-template-columns: 2fr 1fr; }
-  .kanban-grid { grid-template-columns: repeat(2, 1fr); }
   .activity-page-grid { grid-template-columns: 2fr 1fr; }
   .help-page-grid { grid-template-columns: 2fr 1fr; }
   .calendar-page-grid { grid-template-columns: 1fr 1fr; }
@@ -683,7 +693,6 @@
 @media (min-width: 768px) {
   .kpi-grid { grid-template-columns: repeat(4, 1fr); }
   .projects-grid { grid-template-columns: repeat(3, 1fr); }
-  .kanban-grid { grid-template-columns: repeat(3, 1fr); }
   .features-grid { grid-template-columns: repeat(2, 1fr); }
   .calendar-features-row { grid-template-columns: 1fr 2fr; }
   .form-activity-row { grid-template-columns: 1fr 1fr; }
@@ -732,7 +741,6 @@
   .features-grid { grid-template-columns: repeat(3, 1fr); }
   .gallery-grid { grid-template-columns: repeat(4, 1fr); }
   .projects-grid { grid-template-columns: repeat(3, 1fr); }
-  .kanban-grid { grid-template-columns: repeat(4, 1fr); }
 
   /* Wider padding for app-main at laptop sizes */
   .app-main { padding: var(--space-xl); }
@@ -752,7 +760,6 @@
   .chart-grid { grid-template-columns: 1fr; }
   .features-grid { grid-template-columns: 1fr; }
   .projects-grid { grid-template-columns: 1fr; }
-  .kanban-grid { grid-template-columns: 1fr; }
   .files-grid { grid-template-columns: 1fr; }
   .profile-grid { grid-template-columns: 1fr; }
   .activity-grid { grid-template-columns: 1fr; }
@@ -762,6 +769,24 @@
   .finance-grid { grid-template-columns: 1fr; }
   .social-grid { grid-template-columns: 1fr; }
   .notes-grid { grid-template-columns: 1fr; }
+}
+
+/* Kanban uses container queries so the column count reacts to the kanban's
+   own width (not the viewport). At ~384px the kanban area is too narrow for
+   4 columns, so it falls back to 3 / 2 / 1 as space shrinks. The 1-column
+   default lives at the top of this block to avoid cascade ordering issues
+   between the base rule (display/gap) and these per-breakpoint rules. */
+@container app-main (max-width: 639.98px) {
+  .kanban-grid { grid-template-columns: 1fr; }
+}
+@container app-main (min-width: 640px) {
+  .kanban-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@container app-main (min-width: 768px) {
+  .kanban-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@container app-main (min-width: 1024px) {
+  .kanban-grid { grid-template-columns: repeat(4, 1fr); }
 }
 
 /* ===== Editor sheet responsive overrides (Task 7+8) ===== */
@@ -1208,9 +1233,13 @@
 }
 
 /* ===== Hamburger visibility ===== */
-/* Hamburger is always visible — the app shell uses it on every breakpoint so
-   users can reach the sidebar even on desktop if they want. */
+/* Hamburger only appears on small viewports (below `lg`). At `lg` and above
+   the sidebar is rendered as a permanent rail in App.tsx, so the toggle
+   would be redundant. */
 .nav__hamburger { display: inline-flex; }
+@media (min-width: 1024px) {
+  .nav__hamburger { display: none; }
+}
 
 /* ===== Responsive page grids (Task 9) ===== */
 
@@ -1410,7 +1439,14 @@
 .chat-composer__input { flex: 1; }
 
 /* ===== KanbanPage ===== */
-/* .kanban-grid declared in the consolidated responsive section above */
+/* The kanban uses container queries (not viewport media queries) so the
+   column count reacts to the kanban's own width — when a side editor
+   panel squeezes `.app-main` to ~384px on a 1024px laptop, the board
+   still picks the right column count for the space it actually has. */
+.kanban-grid {
+  display: grid;
+  gap: var(--space-md);
+}
 .kanban-col {
   background: var(--color-bg-subtle);
   border-radius: var(--radius-lg);
