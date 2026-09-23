@@ -4,14 +4,15 @@ import { useBreakpoint } from './hooks/useBreakpoint'
 import { useIsMobile } from './hooks/useIsMobile'
 import { useIsTablet } from './hooks/useIsTablet'
 import { useTheme } from './state/useTheme'
-import { validateTheme } from './theme/validate'
 import { presets } from './theme/presets'
+import {
+  exportJson, exportCss, exportTailwind3, exportTailwind4,
+  detectAndParse, mergeTheme, missingSections,
+  type ColorFormat, type ExportFormat,
+} from './theme/io'
 import { Nav } from './components/dashboard/Nav'
 import { Sidebar } from './components/dashboard/Sidebar'
 import { EditorPanel } from './components/editor/EditorPanel'
-import { JsonEditor } from './components/editor/JsonEditor'
-import { PresetGallery } from './components/editor/PresetGallery'
-import { ImportExport } from './components/editor/ImportExport'
 import { Drawer } from './components/ui/Drawer'
 import { Toast } from './components/ui/Toast'
 import { DashboardPage } from './pages/DashboardPage'
@@ -27,7 +28,6 @@ import { NotFoundPage } from './pages/NotFoundPage'
 import { SlidesPage } from './pages/SlidesPage'
 import { ChatPage } from './pages/ChatPage'
 import { KanbanPage } from './pages/KanbanPage'
-import { GalleryPage } from './pages/GalleryPage'
 import { HabitsPage } from './pages/HabitsPage'
 import { FinancePage } from './pages/FinancePage'
 import { NotesPage } from './pages/NotesPage'
@@ -38,56 +38,105 @@ import { AreaChartPage } from './pages/AreaChartPage'
 import { PieChartPage } from './pages/PieChartPage'
 import { ScatterChartPage } from './pages/ScatterChartPage'
 import { RadarChartPage } from './pages/RadarChartPage'
+import { ComponentsIndexPage } from './pages/components/ComponentsIndexPage'
+import { LayoutPage } from './pages/components/LayoutPage'
+import { FormsPage } from './pages/components/FormsPage'
+import { DataDisplayPage } from './pages/components/DataDisplayPage'
+import { FeedbackPage } from './pages/components/FeedbackPage'
+import { OverlayPage } from './pages/components/OverlayPage'
+import { NavigationCategoryPage } from './pages/components/NavigationPage'
+import { TypographyPage } from './pages/components/TypographyPage'
+import { MediaPage } from './pages/components/MediaPage'
+import { DashboardLayout } from './pages/layouts/DashboardLayout'
+import { SettingsLayout } from './pages/layouts/SettingsLayout'
+import { ProfileLayout } from './pages/layouts/ProfileLayout'
+import { SocialLayout } from './pages/layouts/SocialLayout'
+import { WikiLayout } from './pages/layouts/WikiLayout'
+import { RichTextLayout } from './pages/layouts/RichTextLayout'
 
 export default function App() {
-  const { theme, setTheme, dirty, save, reset } = useTheme()
+  const { theme, setTheme, dirty, reset, error } = useTheme({
+    onCorrupt: (reason) => {
+      // Stored theme was unreadable — log so devs can investigate, but don't
+      // surface a toast (the UI already shows the default theme).
+      console.warn(`[theme] cleared corrupt stored theme (${reason})`)
+    }
+  })
   const [toast, setToast] = useState<{ message: string; tone: 'error' | 'success' } | null>(null)
   const isWide = useBreakpoint('lg')
   const isMobile = useIsMobile()
   const isTablet = useIsTablet()
   const [editorOpen, setEditorOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [exportFormat, setExportFormat] = useState<ExportFormat>('json')
+  const [colorFormat, setColorFormat] = useState<ColorFormat>('hex')
 
+  // Surface auto-save errors (e.g. localStorage quota exceeded) as a toast.
   useEffect(() => {
-    if (!dirty) return
-    const handler = (e: BeforeUnloadEvent) => {
-      e.preventDefault()
-      e.returnValue = ''
-    }
-    window.addEventListener('beforeunload', handler)
-    return () => window.removeEventListener('beforeunload', handler)
-  }, [dirty])
+    if (error) setToast({ message: `Couldn't save: ${error}`, tone: 'error' })
+  }, [error])
 
   // Close menu when viewport widens to desktop
   useEffect(() => {
     if (isWide && menuOpen) setMenuOpen(false)
   }, [isWide, menuOpen])
 
-  const handleExport = () => {
-    const blob = new Blob([JSON.stringify(theme, null, 2)], { type: 'application/json' })
+  // Close editor sheet when viewport widens to desktop (the desktop layout has its own rail)
+  useEffect(() => {
+    if (isWide && editorOpen) setEditorOpen(false)
+  }, [isWide, editorOpen])
+
+  const handleExport = (format: ExportFormat, color: ColorFormat) => {
+    let payload
+    const warnings: string[] = []
+    switch (format) {
+      case 'json':
+        payload = exportJson(theme)
+        break
+      case 'css':
+        payload = exportCss(theme, color)
+        break
+      case 'tailwind4':
+        payload = exportTailwind4(theme, color)
+        break
+      case 'tailwind3': {
+        const r = exportTailwind3(theme, color)
+        payload = { text: r.text, filename: r.filename, mime: r.mime }
+        warnings.push(...r.warnings)
+        break
+      }
+    }
+
+    const blob = new Blob([payload.text], { type: payload.mime })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `theme-${theme.name.toLowerCase().replace(/\s+/g, '-')}.json`
+    a.download = payload.filename
     a.click()
     URL.revokeObjectURL(url)
-    setToast({ message: 'Theme exported', tone: 'success' })
+
+    if (warnings.length) {
+      setToast({ message: `Exported with: ${warnings.join('; ')}`, tone: 'error' })
+    } else {
+      setToast({ message: 'Theme exported', tone: 'success' })
+    }
   }
 
-  const handleImportText = (text: string) => {
-    try {
-      const parsed: unknown = JSON.parse(text)
-      const result = validateTheme(parsed)
-      if (result.ok) {
-        if (dirty && !confirm('You have unsaved changes. Replace with imported theme?')) return
-        setTheme(result.theme)
-        setToast({ message: 'Theme imported', tone: 'success' })
-      } else {
-        setToast({ message: `Invalid theme: ${result.errors[0]}`, tone: 'error' })
-      }
-    } catch (e) {
-      setToast({ message: `Invalid JSON: ${e instanceof Error ? e.message : 'parse error'}`, tone: 'error' })
+  const handleImportText = (text: string, filename: string) => {
+    const result = detectAndParse(text, filename)
+    if (!result.ok) {
+      setToast({ message: `Import failed: ${result.error}`, tone: 'error' })
+      return
     }
+    const merged = mergeTheme(theme, result.partial)
+    setTheme(merged)
+    const missing = missingSections(result.partial)
+    const keepMsg = missing.length ? ` kept current ${missing.join(', ')}` : ''
+    const warnMsg = result.warnings.length ? ` (${result.warnings[0]})` : ''
+    setToast({
+      message: `Imported ${result.detectedFormat}${keepMsg}${warnMsg}`,
+      tone: result.warnings.length ? 'error' : 'success',
+    })
   }
 
   const handleSelectPreset = (preset: typeof presets[number]) => {
@@ -100,7 +149,7 @@ export default function App() {
     ? 'editor-sheet editor-sheet--full'
     : isTablet
     ? 'editor-sheet editor-sheet--bottom'
-    : 'editor-sheet editor-sheet--full'
+    : 'editor-sheet'
 
   return (
     <div className="app-shell">
@@ -109,16 +158,17 @@ export default function App() {
         dirty={dirty}
         menuOpen={menuOpen}
         onToggleMenu={() => setMenuOpen(o => !o)}
-        onSave={() => {
-          const result = save()
-          if (result.ok) setToast({ message: 'Theme saved', tone: 'success' })
-          else setToast({ message: `Could not save: ${result.error}`, tone: 'error' })
-        }}
-        onExport={handleExport}
-        onImport={() => {/* legacy — ImportExport handles it now; keep prop noop */}}
         onReset={() => {
           if (!dirty || confirm('Discard unsaved changes?')) reset()
         }}
+        presets={presets}
+        onSelectPreset={handleSelectPreset}
+        onImportText={handleImportText}
+        exportFormat={exportFormat}
+        onExportFormatChange={setExportFormat}
+        colorFormat={colorFormat}
+        onColorFormatChange={setColorFormat}
+        onExport={handleExport}
       />
       <div className={`app-body ${isWide ? '' : 'app-body--narrow'}`}>
         {isWide ? (
@@ -148,7 +198,6 @@ export default function App() {
             <Route path="/demos/slides" element={<SlidesPage />} />
             <Route path="/demos/chat" element={<ChatPage />} />
             <Route path="/demos/kanban" element={<KanbanPage />} />
-            <Route path="/demos/gallery" element={<GalleryPage />} />
             <Route path="/demos/habits" element={<HabitsPage />} />
             <Route path="/demos/finance" element={<FinancePage />} />
             <Route path="/demos/notes" element={<NotesPage />} />
@@ -159,6 +208,28 @@ export default function App() {
             <Route path="/charts/pie" element={<PieChartPage />} />
             <Route path="/charts/scatter" element={<ScatterChartPage />} />
             <Route path="/charts/radar" element={<RadarChartPage />} />
+            <Route path="/components" element={<ComponentsIndexPage />} />
+            <Route path="/components/layout" element={<LayoutPage />} />
+            <Route path="/components/forms" element={<FormsPage />} />
+            <Route path="/components/data-display" element={<DataDisplayPage />} />
+            <Route path="/components/feedback" element={<FeedbackPage />} />
+            <Route path="/components/overlay" element={<OverlayPage />} />
+            <Route path="/components/navigation" element={<NavigationCategoryPage />} />
+            <Route path="/components/typography" element={<TypographyPage />} />
+            <Route path="/components/media" element={<MediaPage />} />
+            {/* Old routes — keep working as redirects */}
+            <Route path="/components/containers" element={<Navigate to="/components/layout" replace />} />
+            <Route path="/components/surfaces" element={<Navigate to="/components/data-display" replace />} />
+            <Route path="/components/inputs" element={<Navigate to="/components/forms" replace />} />
+            <Route path="/components/content" element={<Navigate to="/components/typography" replace />} />
+            {/* Old flat navigation route redirect */}
+            <Route path="/layouts" element={<Navigate to="/layouts/dashboard" replace />} />
+            <Route path="/layouts/dashboard" element={<DashboardLayout />} />
+            <Route path="/layouts/settings" element={<SettingsLayout />} />
+            <Route path="/layouts/profile" element={<ProfileLayout />} />
+            <Route path="/layouts/social" element={<SocialLayout />} />
+            <Route path="/layouts/wiki" element={<WikiLayout />} />
+            <Route path="/layouts/rich-text" element={<RichTextLayout />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>
@@ -166,7 +237,8 @@ export default function App() {
           <EditorPanel
             theme={theme}
             onChange={setTheme}
-            jsonSlot={<JsonEditor theme={theme} onChange={setTheme} />}
+            exportFormat={exportFormat}
+            colorFormat={colorFormat}
           />
         ) : (
           <>
@@ -175,7 +247,8 @@ export default function App() {
                 <EditorPanel
                   theme={theme}
                   onChange={setTheme}
-                  jsonSlot={<JsonEditor theme={theme} onChange={setTheme} />}
+                  exportFormat={exportFormat}
+                  colorFormat={colorFormat}
                 />
               </div>
             )}
@@ -184,15 +257,6 @@ export default function App() {
             </button>
           </>
         )}
-      </div>
-      <div className="app-bottombar">
-        <PresetGallery
-          presets={presets}
-          currentName={theme.name}
-          dirty={dirty}
-          onSelect={handleSelectPreset}
-        />
-        <ImportExport onImportText={handleImportText} onExport={handleExport} />
       </div>
       {toast && <Toast message={toast.message} tone={toast.tone} onDismiss={() => setToast(null)} />}
     </div>

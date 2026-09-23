@@ -1,15 +1,17 @@
-import { ReactNode } from 'react'
+import { CSSProperties, ReactNode } from 'react'
 
 type Props = {
-  title?: string
+  title?: ReactNode
   action?: ReactNode
   children: ReactNode
   className?: string
+  id?: string
+  style?: CSSProperties
 }
 
-export function Card({ title, action, children, className = '' }: Props) {
+export function Card({ title, action, children, className = '', id, style }: Props) {
   return (
-    <section className={`card ${className}`}>
+    <section className={`card ${className}`} id={id} style={style}>
       {(title || action) && (
         <header className="card__header">
           {title && <h3 className="card__title">{title}</h3>}
