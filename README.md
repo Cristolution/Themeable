@@ -1,108 +1,101 @@
-# Themeable Dashboard
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/brand/themeable-horizontal-on-dark.svg" />
+    <img src="docs/brand/themeable-horizontal.svg" alt="Themeable" width="360" />
+  </picture>
+</p>
 
-A generic dashboard web app whose entire visual design is driven by a JSON theme. Edit themes visually or in raw JSON, switch between built-in presets, save to `localStorage`, or import/export JSON files to share.
+# Themeable
+
+**One JSON file restyles an entire UI.** Themeable is a live theme editor for design tokens: pick one of 62 presets, tweak colors, type, spacing, shadows and shape visually or as JSON, have an AI write a theme for you, and export the result as CSS variables or a Tailwind config.
+
+![Themeable landing page — the page itself re-skins as you pick presets](docs/screenshot-landing.png)
+
+## Features
+
+- **62 hand-made presets.** Midnight, Newsprint, Arcade, Claymorphism, Swiss Design, Vaporwave, Liquid Glass and more. Each one changes type, shape and shadows, not only colors.
+- **Visual and JSON editing.** Color pickers, length inputs with unit switching, shadow builders and a font picker, or edit the raw JSON with live validation.
+- **Generate themes with AI.** Describe a look, copy a ready-made prompt into ChatGPT, Claude, Gemini or any chat AI, then paste the reply back. The prompt includes the full schema, contrast rules and the fonts the app can load.
+- **Real fonts.** Themes that reference Google Fonts (Inter, Fraunces, VT323, Space Grotesk and about 50 others) load them on demand.
+- **Import and export.** JSON, plain CSS `:root` variables, a Tailwind v4 `@theme` block or a Tailwind v3 config, with colors in hex, RGB, HSL or OKLCH. Imports detect the format automatically.
+- **A full UI to test against.** Dashboard, component gallery (forms, data display, feedback, overlays, navigation, typography, media), page layouts, charts and demo apps (chat, kanban, slides, finance, notes and more), all driven by the same tokens.
+- **RTL and responsive.** Flip `direction` to `rtl` and the whole layout mirrors. The shell adapts from phone to wide desktop.
+- **Private by default.** Everything runs in the browser and auto-saves to `localStorage`. No account, no backend.
+
+![The editor with the Claymorphism preset](docs/screenshot-editor.png)
 
 ## Quick start
 
 ```bash
 npm install
-npm run dev
+npm run dev        # http://localhost:5173
 ```
 
-Open `http://localhost:5173/`.
+| Script | What it does |
+| --- | --- |
+| `npm run dev` | Start the Vite dev server |
+| `npm run build` | Type-check and build to `dist/` |
+| `npm run preview` | Serve the production build |
+| `npm test` | Run the Vitest suite |
 
-## What you can do
+## Make a theme with AI
 
-- **Edit themes visually** — color pickers, dropdowns, sliders for every token
-- **Edit themes as JSON** — full schema visibility, live validation
-- **Switch presets** — Midnight, Solarized Light, Monokai, Paper
-- **Save / Reset** — themes persist across reloads via `localStorage`
-- **Import / Export** — share themes as `.json` files
-- **Navigate 8 pages** — Dashboard, Activity, Calendar, Projects, Tasks, Files, Profile, Settings, Help (plus a NotFound catch-all)
-- **Toggle night mode** — flip a single theme field and the whole UI inverts via CSS filter
-- **Browse 9 demo pages** — Slides, Chat, Kanban, Gallery, Habits, Finance, Notes, Quiz, Social under `/demos/*`
-- **Collapse and search the editor** — visual editor sections fold/unfold and filter by token name (persists in `localStorage`)
+1. Open the app and click **✦ AI theme** (or use the "Make one with AI" section on the landing page).
+2. Describe the look you want and click **Copy AI prompt**.
+3. Paste it into any chat AI. It replies with a theme JSON.
+4. Paste the whole reply into step 2 of the dialog and click **Apply theme**. Code fences and surrounding text are stripped automatically.
 
-## What's new
+Using [Claude Code](https://claude.com/claude-code)? This repo ships a `Themeable` skill in [.claude/skills/Themeable](.claude/skills/Themeable/SKILL.md). Ask for "a theme that feels like a 1970s NASA control room" and it writes `themes/<name>.json` for you to import.
 
-- **20 new theme tokens** — 6 shadows (`button`, `input`, `card`, `focus`, `inner`, `glow`), 9 colors (`bgHover`, `bgActive`, `textInverse`, `borderStrong`, `focusRing`, `info`, `link`, `codeBg`, `overlay`), and 5 breakpoints (`sm`, `md`, `lg`, `xl`, `2xl`)
-- **8 new pages** wired through React Router v6 (`react-router-dom`) — Activity, Calendar, Projects, Tasks, Files, Profile, Settings, Help
-- **4 new shared components** — `InfoPill`, `Link`, `Modal`, `CodeBlock`
-- **`useBreakpoint` hook** — reads a breakpoint token from the active theme (replaces the old `useMediaQuery`)
-- **Editor expanded** — the visual editor now exposes the 9 new colors, 6 new shadows, and 5 new breakpoints
+## Theme format
 
-## What's new in v3
+A theme is a single JSON object. The full TypeScript type lives in [src/theme/schema.ts](src/theme/schema.ts) and is validated by [src/theme/validate.ts](src/theme/validate.ts).
 
-- **Text direction as a theme token** — every `Theme` now carries `direction: 'ltr' | 'rtl'`. When `applyTheme` runs, it sets `<html dir="...">` so the entire layout flips. `validateTheme` rejects anything that isn't `ltr` or `rtl`, all four built-in presets ship with `direction: 'ltr'`, and the visual editor exposes a dedicated LTR / RTL toggle at the top.
-- **7 new shared UI components** — `Checkbox`, `Radio` + `RadioGroup`, `Drawer`, `HamburgerMenu`, `FontPicker`, `LengthInput`, `SizePreview`.
-- **`FontPicker` with 200+ entries** — a searchable dropdown of over 230 curated font stacks (system stacks, web-safe families, serif/sans/mono/display categories), with an "Edit" affordance for custom stacks.
-- **Editor overhaul for length tokens** — every font-size, spacing, radius, and border-width field now uses `LengthInput` (number input + unit dropdown for `px` / `rem` / `em` / `%` / `vh` / `vw` / `pt` / `ch`) paired with a `SizePreview` that renders a visual preview of the value (font sample, dot of the right size, rounded-corner swatch, spacing bar).
-- **Responsive shell** — at narrow viewports the desktop nav links collapse behind a `HamburgerMenu` button that opens the sidebar inside a `Drawer`. Sidebar links use logical properties so the drawer slides in from the correct inline edge in both LTR and RTL.
-- **Responsive editor panel** — the editor slides up as a bottom sheet at tablet widths and goes full-screen on mobile, with the visual / JSON tab strip pinned to the top.
-- **Responsive dashboards** — dashboard grids, stat cards, and feature cards reflow across `sm` / `md` / `lg` breakpoints.
-- **RTL via logical CSS properties** — `base.css` was rewritten to use `margin-inline-*`, `padding-inline-*`, `border-inline-start` / `border-inline-end`, `inset-inline-*`, and friends. All components honor the active `direction` automatically with no per-component branching.
+| Key | Contents |
+| --- | --- |
+| `name` | Display name |
+| `colors` | 20 slots: `bg`, `bgElevated`, `bgSubtle`, `bgHover`, `bgActive`, `text`, `textMuted`, `textInverse`, `border`, `borderStrong`, `accent`, `accentText`, `success`, `warning`, `danger`, `info`, `link`, `focusRing`, `codeBg`, `overlay` |
+| `typography` | `fontFamily` (`body`, `heading`, `mono`), `fontSize` (`xs`–`2xl`), `fontWeight`, `lineHeight` |
+| `spacing` | `unit`, `xs`–`2xl` |
+| `radius` | `none`, `sm`, `md`, `lg`, `full` |
+| `shadows` | `none`, `sm`, `md`, `lg`, `button`, `input`, `card`, `focus`, `inner`, `glow` |
+| `borders` | `width`, `style` (`solid` / `dashed` / `dotted` / `none`) |
+| `transitions` | `fast`, `normal`, `slow` |
+| `breakpoints` | `sm`, `md`, `lg`, `xl`, `2xl` |
+| `direction` | `ltr` or `rtl` |
+| `nightMode` | `true` inverts the whole page with a CSS filter, a quick way to preview a light theme dark |
+| `customCss` | Raw CSS appended after the generated `:root` block |
 
-## What's new in v4
-
-- **`nightMode: boolean` theme field** — every `Theme` now carries a `nightMode` flag. When `applyTheme` runs, it sets `document.documentElement.style.filter` to `invert(1) hue-rotate(180deg)` while the flag is on (and clears it otherwise), giving the entire UI a one-click dark mode without re-tokening. `validateTheme` requires the field, all four built-in presets include it, and the visual editor exposes a dedicated toggle.
-- **9 new demo pages** — `Slides`, `Chat`, `Kanban`, `Gallery`, `Habits`, `Finance`, `Notes`, `Quiz`, `Social` are wired through React Router under `/demos/slides`, `/demos/chat`, `/demos/kanban`, `/demos/gallery`, `/demos/habits`, `/demos/finance`, `/demos/notes`, `/demos/quiz`, and `/demos/social`. Each demo uses real `var(--*)` tokens so it re-themes live when the theme changes.
-- **Sidebar reorganized with a "Demos" section** — the sidebar now groups the 9 new demo routes under their own `Demos` heading so they're easy to find alongside the regular navigation.
-- **`CollapsibleSection` + `useLocalStorage` for the editor** — the `VisualEditor` is now collapsible (sections can be folded/unfolded) and ships with a search field that filters tokens by name. Open/closed state for each section and the search query are persisted to `localStorage` via a new `useLocalStorage` hook so the editor looks the same across reloads.
-- **`.gitignore` updated for build artifacts** — `dist`, `dist-ssr`, `*.tsbuildinfo`, the compiled `vite.config.js` / `vite.config.d.ts`, and `vitest.config.js` / `vitest.config.d.ts` are now ignored so a clean `npm run build` leaves the working tree clean.
+Every token becomes a CSS custom property (`--color-accent`, `--font-heading`, `--radius-md`, `--shadow-card`, …) that components read directly.
 
 ## Project structure
 
 ```
 src/
-  theme/        Schema, engine (CSS generation), validator, presets, storage
-  state/        useTheme hook
-  dashboard/    Sample data
-  pages/        DashboardPage, ActivityPage, CalendarPage, ProjectsPage,
-                TasksPage, FilesPage, ProfilePage, SettingsPage,
-                HelpPage, NotFoundPage
+  theme/        schema, validator, CSS engine, presets, font loader, AI prompt, io/ (import & export)
+  state/        useTheme (state + auto-save) and ThemeProvider (single shared instance)
   components/
-    editor/      EditorPanel, VisualEditor, JsonEditor, PresetGallery, ImportExport
-    dashboard/  Nav, Sidebar, StatCard, charts, table, form, feed, calendar, features
-    ui/         Button, Input, Select, Checkbox, Radio, RadioGroup,
-                Card, Pill, Toast, Drawer, HamburgerMenu,
-                InfoPill, Link, Modal, CodeBlock,
-                FontPicker, LengthInput, SizePreview
-  styles/       base.css, components.css
-  hooks/        useBreakpoint
-  App.tsx       Routes are declared inline (no router.tsx file)
+    ai/         AI prompt builder and dialog
+    editor/     visual editor, JSON/code editor, import/export controls
+    dashboard/  app shell (nav, sidebar) and dashboard widgets
+    ui/         primitives: Button, Menu, Modal, Drawer, ColorInput, FontPicker, ...
+  pages/        landing page, dashboard, component gallery, layouts, charts, demos
+  styles/       base, component and landing styles, all token-driven
+tests/          Vitest suites for the theme engine, io, state and UI primitives
 ```
 
-## Theme schema
+## Deploying
 
-See `src/theme/schema.ts` for the full TypeScript schema. Top-level keys:
+It's a static single-page app. `npm run build` produces `dist/`, which you can deploy anywhere. SPA fallbacks are included for Vercel ([vercel.json](vercel.json)) and Netlify ([public/_redirects](public/_redirects)). After deploying, set `og:image` in [index.html](index.html) to an absolute URL so link previews show the card image, and add your repo link in [src/siteConfig.ts](src/siteConfig.ts).
 
-- `name` — display name
-- `colors` — `bg`, `bgElevated`, `bgSubtle`, `bgHover`, `bgActive`, `text`, `textMuted`, `textInverse`, `border`, `borderStrong`, `accent`, `accentText`, `success`, `warning`, `danger`, `info`, `link`, `focusRing`, `codeBg`, `overlay` (hex / rgba)
-- `typography` — fontFamily, fontSize, fontWeight, lineHeight
-- `spacing` — unit, xs..2xl (CSS length strings)
-- `radius` — none..full (CSS length strings)
-- `shadows` — none, sm, md, lg, button, input, card, focus, inner, glow (CSS shadow values)
-- `borders` — width, style (`solid` | `dashed` | `dotted` | `none`)
-- `transitions` — fast, normal, slow (CSS transition values)
-- `breakpoints` — sm, md, lg, xl, 2xl (CSS length strings)
-- `customCss` — raw CSS appended after `:root` (no `<script>` allowed)
-- `direction` — `'ltr' | 'rtl'`. Sets `<html dir>` when the theme is applied; layout uses logical CSS properties so the entire UI flips for RTL.
+## Contributing
 
-## Tests
+Issues and pull requests are welcome, and new presets especially. A preset is a `Theme` object in [src/theme/presets.generated.ts](src/theme/presets.generated.ts). Add it to the `presets` array, and `npm test` checks that it validates and that its name is unique.
 
-```bash
-npm test
-```
+## Brand
 
-Validator tests in `tests/theme/validate.test.ts`.
-
-## Build
-
-```bash
-npm run build
-npm run preview
-```
+The Token T logo, colours and usage rules are in [brand/logo](brand/logo/README.md).
 
 ## License
 
-MIT
+[MIT](LICENSE)

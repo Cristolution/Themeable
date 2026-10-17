@@ -172,7 +172,7 @@
   border-bottom: var(--border-width) var(--border-style) var(--color-border);
 }
 .nav__brand { display: flex; align-items: center; gap: var(--space-sm); font-weight: var(--font-weight-bold); }
-.nav__logo { color: var(--color-accent); font-size: var(--font-size-xl); }
+.nav__logo { display: block; flex-shrink: 0; }
 .nav__title { font-size: var(--font-size-lg); font-family: var(--font-heading); }
 
 .nav__links { display: flex; gap: var(--space-md); flex: 1; margin-left: var(--space-xl); }

@@ -31,7 +31,7 @@
   font-size: var(--font-size-lg);
   text-decoration: none;
 }
-.landing-nav__logo { color: var(--color-accent); }
+.landing-nav__brand .logo { display: block; flex-shrink: 0; }
 .landing-nav__links { display: flex; gap: var(--space-lg); margin-inline-start: auto; }
 .landing-nav__links a {
   color: var(--color-text-muted);

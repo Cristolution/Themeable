@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Button } from '../ui/Button'
 import { ImportExport } from '../editor/ImportExport'
 import { HamburgerMenu } from '../ui/HamburgerMenu'
+import { Logo } from '../ui/Logo'
 import { Menu, MenuTrigger, MenuPanel, MenuItem } from '../ui/Menu'
 import { useIsMobile } from '../../hooks/useIsMobile'
 import { useIsTablet } from '../../hooks/useIsTablet'
@@ -86,7 +87,7 @@ export function Nav({
           <HamburgerMenu open={menuOpen} onToggle={onToggleMenu} ariaLabel="Toggle menu" />
         </span>
         <Link to="/" className="nav__home" aria-label="Themeable home">
-          <span className="nav__logo">◆</span>
+          <Logo size={28} className="nav__logo" />
           <span className="nav__title">Themeable</span>
         </Link>
       </div>

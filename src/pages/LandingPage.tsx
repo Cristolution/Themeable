@@ -4,6 +4,7 @@ import type { Theme } from '../theme/schema'
 import { ensureThemeFonts } from '../theme/fonts'
 import { exportCss, exportTailwind4 } from '../theme/io'
 import { AiPromptBuilder } from '../components/ai/AiPromptBuilder'
+import { Logo } from '../components/ui/Logo'
 import { site } from '../siteConfig'
 
 type Props = {
@@ -70,7 +71,7 @@ export function LandingPage({ theme, presets, onSelectPreset }: Props) {
     <div className="landing">
       <header className="landing-nav">
         <Link to="/" className="landing-nav__brand">
-          <span className="landing-nav__logo" aria-hidden>◆</span> Themeable
+          <Logo size={28} /> Themeable
         </Link>
         <nav className="landing-nav__links" aria-label="Page">
           <a href="#tokens">What's in a theme</a>

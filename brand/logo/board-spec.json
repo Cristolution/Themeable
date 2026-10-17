@@ -1,0 +1,36 @@
+{
+  "brand": "Themeable",
+  "tagline": "One JSON file restyles an entire UI",
+  "brief": "An open-source live theme editor for design tokens, for frontend developers. It should feel precise, adaptable and crafted, and avoid the palette, brush and colour-wheel clichés of design tools.",
+  "adjectives": ["adaptable", "precise", "crafted", "open"],
+  "criteria": "Success: reads as a T at 16 px, works in one colour, carries the 'built from tokens' idea, and can take on any theme's accent.",
+  "industry": "software",
+  "nav": ["Presets", "AI prompt", "Export", "GitHub"],
+  "brand_color": "#4a6cf7",
+  "tile_color": "#0b0d12",
+  "greyscale": false,
+  "final": true,
+  "designer": "Themeable",
+  "round": 2,
+  "concepts": [
+    {
+      "name": "Token T",
+      "symbol": "kit/themeable-symbol.svg",
+      "lockup": "kit/themeable-horizontal.svg",
+      "stacked": "kit/themeable-stacked.svg",
+      "symbol_on_tile": "kit/themeable-symbol-on-dark.svg",
+      "symbol_on_dark": "kit/themeable-symbol-on-dark.svg",
+      "lockup_on_dark": "kit/themeable-horizontal-on-dark.svg",
+      "stacked_on_dark": "kit/themeable-stacked-on-dark.svg",
+      "stacked_on_tile": "kit/themeable-stacked-on-dark.svg",
+      "idea": "A T assembled from two design tokens: a pill-shaped swatch resting on a square stem.",
+      "rationale": [
+        "Two radius tokens in one letter: fully round and square",
+        "The pill takes each theme's accent, so the logo is themeable too",
+        "Simple geometry on an 8-unit grid; a heavier cut for 16 px"
+      ]
+    }
+  ],
+  "recommendation": "Token T in Token Blue #4a6cf7 and Ink #0b0d12, with #7c9cff and #e8eaf0 on dark surfaces.",
+  "next_steps": ["Use the horizontal lockup in the README and nav", "Use the app icon for social avatars", "Keep the pill in an accent colour wherever the logo appears"]
+}
