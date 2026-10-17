@@ -1,21 +1,17 @@
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts'
 import { Card } from '../ui/Card'
+import { useActiveTheme } from '../../state/ThemeProvider'
 
 type Point = { name: string; value: number }
 
-function readVar(name: string, fallback: string): string {
-  if (typeof window === 'undefined') return fallback
-  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback
-}
-
 export function BarChartCard({ data, title = 'Traffic Sources' }: { data: Point[]; title?: string }) {
-  // Read CSS variables directly on each render. The parent re-renders whenever
-  // the theme changes, so a `useState` + `useEffect` cache is unnecessary —
-  // and the previous no-deps effect was an infinite-loop hazard.
-  const accent = readVar('--color-accent', '#3b82f6')
-  const muted = readVar('--color-text-muted', '#666')
-  const border = readVar('--color-border', '#ddd')
-  const bgElevated = readVar('--color-bg-elevated', '#fff')
+  // Take colors from the theme itself rather than reading CSS variables
+  // during render — those are only written after render, so they lag a frame.
+  const { colors } = useActiveTheme()
+  const accent = colors.accent
+  const muted = colors.textMuted
+  const border = colors.border
+  const bgElevated = colors.bgElevated
 
   return (
     <Card title={title}>

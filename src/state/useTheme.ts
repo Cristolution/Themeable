@@ -1,11 +1,22 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { Theme } from '../theme/schema'
 import { applyTheme } from '../theme/engine'
+import { ensureThemeFonts } from '../theme/fonts'
 import { saveTheme, loadTheme } from '../theme/storage'
-import { midnight } from '../theme/presets'
+import { midnight, presets } from '../theme/presets'
 
-// Default theme — Midnight preset (added in Task 21).
 const defaultTheme: Theme = midnight
+
+// Dark presets used to ship with `nightMode: true`, which inverted them into
+// light themes. Stored copies of an unmodified preset get the flag cleared.
+function migrateStored(theme: Theme | null): Theme | null {
+  if (!theme?.nightMode) return theme
+  const preset = presets.find(p => p.name === theme.name)
+  if (preset && !preset.nightMode && JSON.stringify(preset.colors) === JSON.stringify(theme.colors)) {
+    return { ...theme, nightMode: false }
+  }
+  return theme
+}
 
 // Debounce window for auto-save. Short enough that a tab close loses at most
 // a few hundred ms of edits, long enough to coalesce rapid typing / color drags.
@@ -36,7 +47,7 @@ export function useTheme(options: UseThemeOptions = {}): UseThemeResult {
   // Read initial state once. Both `theme` and `lastSaved` start from the same
   // stored value (or the default), so `dirty` is false on mount.
   const initial = useMemo(
-    () => loadTheme({ onCorrupt }) ?? defaultTheme,
+    () => migrateStored(loadTheme({ onCorrupt })) ?? defaultTheme,
     // onCorrupt is intentionally omitted from deps — it's a callback the
     // caller may re-create on every render and we don't want to re-load.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -53,6 +64,7 @@ export function useTheme(options: UseThemeOptions = {}): UseThemeResult {
   // Mirror the theme into the DOM on every change.
   useEffect(() => {
     applyTheme(theme)
+    ensureThemeFonts(theme)
   }, [theme])
 
   // Auto-save: write to localStorage after the debounce window.
@@ -78,12 +90,14 @@ export function useTheme(options: UseThemeOptions = {}): UseThemeResult {
       // Read the freshest theme via a ref to avoid stale closures.
       saveTheme(currentThemeRef.current)
     }
-    window.addEventListener('pagehide', flush)
-    document.addEventListener('visibilitychange', () => {
+    const onVisibility = () => {
       if (document.visibilityState === 'hidden') flush()
-    })
+    }
+    window.addEventListener('pagehide', flush)
+    document.addEventListener('visibilitychange', onVisibility)
     return () => {
       window.removeEventListener('pagehide', flush)
+      document.removeEventListener('visibilitychange', onVisibility)
     }
   }, [])
 

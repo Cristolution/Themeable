@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
 import { Card } from '../components/ui/Card'
 import { Button } from '../components/ui/Button'
-import { useTheme } from '../state/useTheme'
+import { useActiveTheme } from '../state/ThemeProvider'
 
 const slideTitles = ['Welcome', 'Components', 'Theming', 'Responsive', 'Customize']
 
 export function SlidesPage() {
-  const { theme } = useTheme()
+  const theme = useActiveTheme()
   const [index, setIndex] = useState(0)
   const [fullscreen, setFullscreen] = useState(false)
 

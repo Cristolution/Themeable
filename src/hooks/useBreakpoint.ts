@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import { useTheme } from '../state/useTheme'
+import { useActiveTheme } from '../state/ThemeProvider'
 import type { Theme } from '../theme/schema'
 
 export function useBreakpoint(token: keyof Theme['breakpoints']): boolean {
-  const { theme } = useTheme()
+  const theme = useActiveTheme()
   const [matches, setMatches] = useState(() => {
     if (typeof window === 'undefined') return false
     const px = parseInt(theme.breakpoints[token], 10)

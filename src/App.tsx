@@ -3,7 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { useBreakpoint } from './hooks/useBreakpoint'
 import { useIsMobile } from './hooks/useIsMobile'
 import { useIsTablet } from './hooks/useIsTablet'
-import { useTheme } from './state/useTheme'
+import { useThemeContext } from './state/ThemeProvider'
 import { presets } from './theme/presets'
 import {
   exportJson, exportCss, exportTailwind3, exportTailwind4,
@@ -55,13 +55,7 @@ import { WikiLayout } from './pages/layouts/WikiLayout'
 import { RichTextLayout } from './pages/layouts/RichTextLayout'
 
 export default function App() {
-  const { theme, setTheme, dirty, reset, error } = useTheme({
-    onCorrupt: (reason) => {
-      // Stored theme was unreadable — log so devs can investigate, but don't
-      // surface a toast (the UI already shows the default theme).
-      console.warn(`[theme] cleared corrupt stored theme (${reason})`)
-    }
-  })
+  const { theme, setTheme, dirty, reset, error } = useThemeContext()
   const [toast, setToast] = useState<{ message: string; tone: 'error' | 'success' } | null>(null)
   const isWide = useBreakpoint('lg')
   const isMobile = useIsMobile()

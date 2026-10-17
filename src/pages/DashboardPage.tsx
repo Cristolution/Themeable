@@ -1,4 +1,4 @@
-import { useTheme } from '../state/useTheme'
+import { useActiveTheme } from '../state/ThemeProvider'
 import { StatCard } from '../components/dashboard/StatCard'
 import { LineChartCard } from '../components/dashboard/LineChartCard'
 import { BarChartCard } from '../components/dashboard/BarChartCard'
@@ -10,7 +10,7 @@ import { FeatureCards } from '../components/dashboard/FeatureCards'
 import { kpis, lineData, barData, tableRows, activity, featureCards } from '../dashboard/sampleData'
 
 export function DashboardPage() {
-  const { theme } = useTheme()
+  const theme = useActiveTheme()
   return (
     <>
       <h2 style={{ marginBottom: 'var(--space-lg)' }}>{theme.name} Dashboard</h2>
