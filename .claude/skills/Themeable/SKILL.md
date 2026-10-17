@@ -25,8 +25,8 @@ Full schema lives in `src/theme/schema.ts`. Field reference:
 |---|---|---|
 | `name` | string | Display name |
 | `direction` | `"ltr"` \| `"rtl"` | |
-| `nightMode` | boolean | `false` for standard themes |
-| `colors` | object | 11 named color slots (see below) |
+| `nightMode` | boolean | Always `false` — `true` inverts the entire page with a CSS filter |
+| `colors` | object | 20 named color slots (see below) |
 | `typography.fontFamily` | object | `body`, `heading`, `mono` — CSS font-family strings |
 | `typography.fontSize` | object | `xs`, `sm`, `base`, `lg`, `xl`, `2xl` — CSS lengths |
 | `typography.fontWeight` | object | `normal`, `medium`, `bold` — numbers 100-900 |
@@ -47,7 +47,7 @@ Hex values (e.g. `#0a0a0a`) for 19 slots. `overlay` can be hex OR rgba — schem
 
 ## Design principles
 
-1. **Color hierarchy**: Pick one base hue + saturation. Generate the 11 core colors from related shades.
+1. **Color hierarchy**: Pick one base hue + saturation. Generate the 20 color slots from related shades.
    - `bg` / `bgElevated` / `bgSubtle` = three lightness steps of the surface
    - `text` / `textMuted` = two lightness steps of text on bg
    - `accent` = one strong contrast color (button/link)

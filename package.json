@@ -1,14 +1,25 @@
 {
-  "name": "themeable-dashboard",
+  "name": "themeable",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "Live theme editor for design tokens — 62 presets, AI theme prompt, CSS and Tailwind export.",
+  "license": "MIT",
+  "keywords": [
+    "design-tokens",
+    "theme",
+    "theme-editor",
+    "css-variables",
+    "tailwind",
+    "react"
+  ],
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "typecheck": "tsc -b"
   },
   "dependencies": {
     "react": "^18.3.1",
