@@ -131,6 +131,7 @@
   border: none;
   border-radius: var(--radius-full);
   padding: var(--space-md) var(--space-lg);
+  font-family: var(--font-body);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   box-shadow: var(--shadow-lg);
@@ -3085,3 +3086,4 @@ input[type="number"] {
   background: var(--color-accent);
 }
 
+.page-loading { min-height: 60vh; }

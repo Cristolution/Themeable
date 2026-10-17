@@ -140,11 +140,11 @@ export const profileStats = [
 ] as const
 
 export const faqItems = [
-  { id: 'f1', q: 'How do I create a custom theme?', a: 'Open the editor panel on the right, switch to the Visual tab, and edit any token. Changes apply live. Use the JSON tab for raw editing, then Export JSON to save.' },
+  { id: 'f1', q: 'How do I create a custom theme?', a: 'Open the editor panel on the right ("Edit theme" on smaller screens) and edit any token on the Visual tab. Changes apply live and save automatically. Use the JSON tab for raw editing, or click ✦ AI theme to have a chat AI write one for you.' },
   { id: 'f2', q: 'Where are my themes stored?', a: 'Themes are saved in your browser\'s localStorage under the key "td:theme". They persist across reloads but are local to this browser.' },
-  { id: 'f3', q: 'Can I share a theme with someone?', a: 'Yes. Click Export JSON in the top bar to download the theme as a .json file. The recipient clicks Import JSON in their editor and selects your file.' },
+  { id: 'f3', q: 'Can I share a theme with someone?', a: 'Yes. Choose a format in the top bar and click Export to download the theme. The recipient clicks Import and selects your file. JSON, CSS variables and Tailwind configs are all detected automatically.' },
   { id: 'f4', q: 'What does customCss do?', a: 'The customCss field is appended verbatim after the :root block in the theme variables token. Use it for advanced overrides like ::before pseudo-elements.' },
-  { id: 'f5', q: 'How do I reset to a preset?', a: 'Pick a preset chip from the bottom bar. If you have unsaved changes, you will be asked to confirm.' }
+  { id: 'f5', q: 'How do I reset to a preset?', a: 'Open Presets in the top bar and pick one. To undo your edits to the current preset, click Reset; it reverts to the preset you started from.' }
 ] as const
 
 export const helpExamples = [

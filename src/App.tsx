@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react'
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { lazy, Suspense, useEffect, useState } from 'react'
+import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useBreakpoint } from './hooks/useBreakpoint'
 import { useIsMobile } from './hooks/useIsMobile'
 import { useIsTablet } from './hooks/useIsTablet'
+import { useLocalStorage } from './hooks/useLocalStorage'
 import { useThemeContext } from './state/ThemeProvider'
-import { presets } from './theme/presets'
+import { presets, midnight } from './theme/presets'
 import {
   exportJson, exportCss, exportTailwind3, exportTailwind4,
   detectAndParse, mergeTheme, missingSections,
@@ -15,47 +16,51 @@ import { Sidebar } from './components/dashboard/Sidebar'
 import { EditorPanel } from './components/editor/EditorPanel'
 import { Drawer } from './components/ui/Drawer'
 import { Toast } from './components/ui/Toast'
-import { DashboardPage } from './pages/DashboardPage'
-import { ActivityPage } from './pages/ActivityPage'
-import { CalendarPage } from './pages/CalendarPage'
-import { ProjectsPage } from './pages/ProjectsPage'
-import { TasksPage } from './pages/TasksPage'
-import { FilesPage } from './pages/FilesPage'
-import { ProfilePage } from './pages/ProfilePage'
-import { SettingsPage } from './pages/SettingsPage'
-import { HelpPage } from './pages/HelpPage'
-import { NotFoundPage } from './pages/NotFoundPage'
-import { SlidesPage } from './pages/SlidesPage'
-import { ChatPage } from './pages/ChatPage'
-import { KanbanPage } from './pages/KanbanPage'
-import { HabitsPage } from './pages/HabitsPage'
-import { FinancePage } from './pages/FinancePage'
-import { NotesPage } from './pages/NotesPage'
-import { QuizPage } from './pages/QuizPage'
-import { SocialPage } from './pages/SocialPage'
-import { LineChartPage } from './pages/LineChartPage'
-import { AreaChartPage } from './pages/AreaChartPage'
-import { PieChartPage } from './pages/PieChartPage'
-import { ScatterChartPage } from './pages/ScatterChartPage'
-import { RadarChartPage } from './pages/RadarChartPage'
-import { ComponentsIndexPage } from './pages/components/ComponentsIndexPage'
-import { LayoutPage } from './pages/components/LayoutPage'
-import { FormsPage } from './pages/components/FormsPage'
-import { DataDisplayPage } from './pages/components/DataDisplayPage'
-import { FeedbackPage } from './pages/components/FeedbackPage'
-import { OverlayPage } from './pages/components/OverlayPage'
-import { NavigationCategoryPage } from './pages/components/NavigationPage'
-import { TypographyPage } from './pages/components/TypographyPage'
-import { MediaPage } from './pages/components/MediaPage'
-import { DashboardLayout } from './pages/layouts/DashboardLayout'
-import { SettingsLayout } from './pages/layouts/SettingsLayout'
-import { ProfileLayout } from './pages/layouts/ProfileLayout'
-import { SocialLayout } from './pages/layouts/SocialLayout'
-import { WikiLayout } from './pages/layouts/WikiLayout'
-import { RichTextLayout } from './pages/layouts/RichTextLayout'
+import { AiThemeModal } from './components/ai/AiThemeModal'
+import { LandingPage } from './pages/LandingPage'
+
+// App pages load on demand so the landing page stays light.
+const DashboardPage = lazy(() => import('./pages/DashboardPage').then(m => ({ default: m.DashboardPage })))
+const ActivityPage = lazy(() => import('./pages/ActivityPage').then(m => ({ default: m.ActivityPage })))
+const CalendarPage = lazy(() => import('./pages/CalendarPage').then(m => ({ default: m.CalendarPage })))
+const ProjectsPage = lazy(() => import('./pages/ProjectsPage').then(m => ({ default: m.ProjectsPage })))
+const TasksPage = lazy(() => import('./pages/TasksPage').then(m => ({ default: m.TasksPage })))
+const FilesPage = lazy(() => import('./pages/FilesPage').then(m => ({ default: m.FilesPage })))
+const ProfilePage = lazy(() => import('./pages/ProfilePage').then(m => ({ default: m.ProfilePage })))
+const SettingsPage = lazy(() => import('./pages/SettingsPage').then(m => ({ default: m.SettingsPage })))
+const HelpPage = lazy(() => import('./pages/HelpPage').then(m => ({ default: m.HelpPage })))
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })))
+const SlidesPage = lazy(() => import('./pages/SlidesPage').then(m => ({ default: m.SlidesPage })))
+const ChatPage = lazy(() => import('./pages/ChatPage').then(m => ({ default: m.ChatPage })))
+const KanbanPage = lazy(() => import('./pages/KanbanPage').then(m => ({ default: m.KanbanPage })))
+const HabitsPage = lazy(() => import('./pages/HabitsPage').then(m => ({ default: m.HabitsPage })))
+const FinancePage = lazy(() => import('./pages/FinancePage').then(m => ({ default: m.FinancePage })))
+const NotesPage = lazy(() => import('./pages/NotesPage').then(m => ({ default: m.NotesPage })))
+const QuizPage = lazy(() => import('./pages/QuizPage').then(m => ({ default: m.QuizPage })))
+const SocialPage = lazy(() => import('./pages/SocialPage').then(m => ({ default: m.SocialPage })))
+const LineChartPage = lazy(() => import('./pages/LineChartPage').then(m => ({ default: m.LineChartPage })))
+const AreaChartPage = lazy(() => import('./pages/AreaChartPage').then(m => ({ default: m.AreaChartPage })))
+const PieChartPage = lazy(() => import('./pages/PieChartPage').then(m => ({ default: m.PieChartPage })))
+const ScatterChartPage = lazy(() => import('./pages/ScatterChartPage').then(m => ({ default: m.ScatterChartPage })))
+const RadarChartPage = lazy(() => import('./pages/RadarChartPage').then(m => ({ default: m.RadarChartPage })))
+const ComponentsIndexPage = lazy(() => import('./pages/components/ComponentsIndexPage').then(m => ({ default: m.ComponentsIndexPage })))
+const LayoutPage = lazy(() => import('./pages/components/LayoutPage').then(m => ({ default: m.LayoutPage })))
+const FormsPage = lazy(() => import('./pages/components/FormsPage').then(m => ({ default: m.FormsPage })))
+const DataDisplayPage = lazy(() => import('./pages/components/DataDisplayPage').then(m => ({ default: m.DataDisplayPage })))
+const FeedbackPage = lazy(() => import('./pages/components/FeedbackPage').then(m => ({ default: m.FeedbackPage })))
+const OverlayPage = lazy(() => import('./pages/components/OverlayPage').then(m => ({ default: m.OverlayPage })))
+const NavigationCategoryPage = lazy(() => import('./pages/components/NavigationPage').then(m => ({ default: m.NavigationCategoryPage })))
+const TypographyPage = lazy(() => import('./pages/components/TypographyPage').then(m => ({ default: m.TypographyPage })))
+const MediaPage = lazy(() => import('./pages/components/MediaPage').then(m => ({ default: m.MediaPage })))
+const DashboardLayout = lazy(() => import('./pages/layouts/DashboardLayout').then(m => ({ default: m.DashboardLayout })))
+const SettingsLayout = lazy(() => import('./pages/layouts/SettingsLayout').then(m => ({ default: m.SettingsLayout })))
+const ProfileLayout = lazy(() => import('./pages/layouts/ProfileLayout').then(m => ({ default: m.ProfileLayout })))
+const SocialLayout = lazy(() => import('./pages/layouts/SocialLayout').then(m => ({ default: m.SocialLayout })))
+const WikiLayout = lazy(() => import('./pages/layouts/WikiLayout').then(m => ({ default: m.WikiLayout })))
+const RichTextLayout = lazy(() => import('./pages/layouts/RichTextLayout').then(m => ({ default: m.RichTextLayout })))
 
 export default function App() {
-  const { theme, setTheme, dirty, reset, error } = useThemeContext()
+  const { theme, setTheme, error } = useThemeContext()
   const [toast, setToast] = useState<{ message: string; tone: 'error' | 'success' } | null>(null)
   const isWide = useBreakpoint('lg')
   const isMobile = useIsMobile()
@@ -64,6 +69,35 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [exportFormat, setExportFormat] = useState<ExportFormat>('json')
   const [colorFormat, setColorFormat] = useState<ColorFormat>('hex')
+  const [aiOpen, setAiOpen] = useState(false)
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  // The preset the current theme started from — Reset reverts to it. With
+  // auto-save there are no "unsaved changes", so this is what Reset means.
+  const [basePresetName, setBasePresetName] = useLocalStorage('td:base-preset', theme.name)
+  const basePreset =
+    presets.find(p => p.name === basePresetName) ??
+    presets.find(p => p.name === theme.name) ??
+    midnight
+  const modified = JSON.stringify(basePreset) !== JSON.stringify(theme)
+
+  // `?ai=1` (linked from the landing page) opens the AI dialog on arrival.
+  useEffect(() => {
+    const params = new URLSearchParams(location.search)
+    if (params.get('ai') !== '1') return
+    setAiOpen(true)
+    params.delete('ai')
+    const search = params.toString()
+    navigate({ pathname: location.pathname, search: search ? `?${search}` : '' }, { replace: true })
+  }, [location.pathname, location.search, navigate])
+
+  const isLanding = location.pathname === '/'
+  useEffect(() => {
+    document.title = isLanding
+      ? 'Themeable — one JSON file restyles an entire UI'
+      : `${theme.name} · Themeable`
+  }, [isLanding, theme.name])
 
   // Surface auto-save errors (e.g. localStorage quota exceeded) as a toast.
   useEffect(() => {
@@ -133,9 +167,26 @@ export default function App() {
     })
   }
 
-  const handleSelectPreset = (preset: typeof presets[number]) => {
+  const handleSelectPreset = (preset: typeof presets[number], quiet = false) => {
     setTheme(preset)
-    setToast({ message: `Loaded preset: ${preset.name}`, tone: 'success' })
+    setBasePresetName(preset.name)
+    if (!quiet) setToast({ message: `Loaded preset: ${preset.name}`, tone: 'success' })
+  }
+
+  const handleReset = () => {
+    if (confirm(`Revert all changes and go back to the "${basePreset.name}" preset?`)) {
+      setTheme(basePreset)
+    }
+  }
+
+  if (isLanding) {
+    return (
+      <LandingPage
+        theme={theme}
+        presets={presets}
+        onSelectPreset={p => handleSelectPreset(p, true)}
+      />
+    )
   }
 
   // Editor sheet variant: full-screen overlay at mobile, bottom-sheet at tablet
@@ -149,12 +200,11 @@ export default function App() {
     <div className="app-shell">
       <Nav
         themeName={theme.name}
-        dirty={dirty}
+        dirty={modified}
         menuOpen={menuOpen}
         onToggleMenu={() => setMenuOpen(o => !o)}
-        onReset={() => {
-          if (!dirty || confirm('Discard unsaved changes?')) reset()
-        }}
+        onReset={handleReset}
+        onOpenAi={() => setAiOpen(true)}
         presets={presets}
         onSelectPreset={handleSelectPreset}
         onImportText={handleImportText}
@@ -178,8 +228,8 @@ export default function App() {
           </Drawer>
         )}
         <main className="app-main">
+          <Suspense fallback={<div className="page-loading" aria-busy="true" />}>
           <Routes>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/activity" element={<ActivityPage />} />
             <Route path="/calendar" element={<CalendarPage />} />
@@ -226,6 +276,7 @@ export default function App() {
             <Route path="/layouts/rich-text" element={<RichTextLayout />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
+          </Suspense>
         </main>
         {isWide ? (
           <EditorPanel
@@ -252,6 +303,7 @@ export default function App() {
           </>
         )}
       </div>
+      <AiThemeModal open={aiOpen} onClose={() => setAiOpen(false)} onImportText={handleImportText} />
       {toast && <Toast message={toast.message} tone={toast.tone} onDismiss={() => setToast(null)} />}
     </div>
   )

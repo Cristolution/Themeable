@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Button } from '../ui/Button'
 import { ImportExport } from '../editor/ImportExport'
 import { HamburgerMenu } from '../ui/HamburgerMenu'
@@ -13,6 +14,7 @@ type Props = {
   dirty: boolean
   onExport: (format: ExportFormat, colorFormat: ColorFormat) => void
   onReset: () => void
+  onOpenAi: () => void
   menuOpen: boolean
   onToggleMenu: () => void
   presets: Theme[]
@@ -29,6 +31,7 @@ export function Nav({
   dirty,
   onExport,
   onReset,
+  onOpenAi,
   menuOpen,
   onToggleMenu,
   presets,
@@ -82,8 +85,10 @@ export function Nav({
         <span className="nav__hamburger">
           <HamburgerMenu open={menuOpen} onToggle={onToggleMenu} ariaLabel="Toggle menu" />
         </span>
-        <span className="nav__logo">◆</span>
-        <span className="nav__title">Themeable</span>
+        <Link to="/" className="nav__home" aria-label="Themeable home">
+          <span className="nav__logo">◆</span>
+          <span className="nav__title">Themeable</span>
+        </Link>
       </div>
       <div className="nav__actions">
         {compactActions ? (
@@ -102,6 +107,7 @@ export function Nav({
               <div className="nav__more-menu" role="menu">
                 <div className="nav__more-section">
                   <div className="nav__more-heading">Theme</div>
+                  <Button variant="primary" size="sm" onClick={() => { setMoreOpen(false); onOpenAi() }}>✦ AI theme</Button>
                   <Menu open={presetsOpen} onOpenChange={setPresetsOpen}>
                     <MenuTrigger>Presets ▾</MenuTrigger>
                     {presetItems}
@@ -118,14 +124,16 @@ export function Nav({
                 <div className="nav__more-section">
                   <div className="nav__more-heading">Active theme</div>
                   <div className="nav__more-theme-name">
-                    {themeName}{dirty && <span className="nav__dirty" title="Unsaved changes">●</span>}
+                    {themeName}{dirty && <span className="nav__dirty" title="Modified from preset">●</span>}
                   </div>
+                  <Button variant="secondary" size="sm" onClick={onReset} disabled={!dirty}>Reset to preset</Button>
                 </div>
               </div>
             )}
           </div>
         ) : (
           <>
+            <Button variant="primary" size="sm" onClick={onOpenAi}>✦ AI theme</Button>
             <Menu open={presetsOpen} onOpenChange={setPresetsOpen}>
               <MenuTrigger>Presets ▾</MenuTrigger>
               {presetItems}
@@ -139,9 +147,9 @@ export function Nav({
               onColorFormatChange={onColorFormatChange}
             />
             <span className="nav__theme-name">
-              {themeName}{dirty && <span className="nav__dirty" title="Unsaved changes">●</span>}
+              {themeName}{dirty && <span className="nav__dirty" title="Modified from preset">●</span>}
             </span>
-            <Button variant="secondary" size="sm" onClick={onReset} disabled={!dirty}>Reset</Button>
+            <Button variant="secondary" size="sm" onClick={onReset} disabled={!dirty} title="Revert to the original preset">Reset</Button>
           </>
         )}
       </div>

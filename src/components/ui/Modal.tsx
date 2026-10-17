@@ -5,10 +5,11 @@ type Props = {
   open: boolean
   onClose: () => void
   title?: string
+  className?: string
   children: ReactNode
 }
 
-export function Modal({ open, onClose, title, children }: Props) {
+export function Modal({ open, onClose, title, className = '', children }: Props) {
   useEffect(() => {
     if (!open) return
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
@@ -20,7 +21,7 @@ export function Modal({ open, onClose, title, children }: Props) {
 
   return (
     <div className="modal-overlay" onClick={onClose} role="presentation">
-      <div className="modal" onClick={e => e.stopPropagation()} role="dialog" aria-modal="true" aria-label={title}>
+      <div className={`modal ${className}`} onClick={e => e.stopPropagation()} role="dialog" aria-modal="true" aria-label={title}>
         {title && (
           <header className="modal__header">
             <h3 className="modal__title">{title}</h3>
