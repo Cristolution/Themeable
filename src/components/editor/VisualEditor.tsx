@@ -6,6 +6,7 @@ import { SizePreview } from '../ui/SizePreview'
 import { FontPicker } from '../ui/FontPicker'
 import { Menu, MenuTrigger, MenuPanel, MenuItem } from '../ui/Menu'
 import { CollapsibleSection } from '../ui/CollapsibleSection'
+import { ColorInput } from '../ui/ColorInput'
 import { Checkbox } from '../ui/Checkbox'
 import { useLocalStorage } from '../../hooks/useLocalStorage'
 
@@ -94,11 +95,18 @@ export function VisualEditor({ theme, onChange }: Props) {
 
   return (
     <div className="visual-editor">
+      <input
+        type="search"
+        aria-label="Search tokens"
+        className="editor-search"
+        placeholder="Search tokens..."
+        value={search}
+        onChange={e => setSearch(e.target.value.toLowerCase())}
+      />
       <div className={nameVisible ? '' : 'editor-section--no-match'}>
         <CollapsibleSection title="Name" persistKey="name">
           <div className="ve-section">
-            <h4 className="ve-section__title">Name</h4>
-            <input className="field__input" value={theme.name} onChange={e => update(t => setKey(t, 'name', e.target.value))} />
+            <input className="field__input" aria-label="Theme name" value={theme.name} onChange={e => update(t => setKey(t, 'name', e.target.value))} />
           </div>
         </CollapsibleSection>
       </div>
@@ -106,7 +114,6 @@ export function VisualEditor({ theme, onChange }: Props) {
       <div className={directionVisible ? '' : 'editor-section--no-match'}>
         <CollapsibleSection title="Direction" persistKey="direction">
           <div className="ve-section">
-            <h4 className="ve-section__title">Direction</h4>
             <div className="ve-direction-toggle" role="radiogroup" aria-label="Text direction">
               <button
                 type="button"
@@ -131,13 +138,6 @@ export function VisualEditor({ theme, onChange }: Props) {
         </CollapsibleSection>
       </div>
 
-      <input
-        type="text"
-        className="editor-search"
-        placeholder="Search tokens..."
-        value={search}
-        onChange={e => setSearch(e.target.value.toLowerCase())}
-      />
 
       <Checkbox
         checked={theme.nightMode}
@@ -148,12 +148,11 @@ export function VisualEditor({ theme, onChange }: Props) {
       <div className={colorsVisible ? '' : 'editor-section--no-match'}>
         <CollapsibleSection title="Colors" persistKey="colors">
           <div className="ve-section">
-            <h4 className="ve-section__title">Colors</h4>
             <div className="ve-grid">
               {Object.entries(theme.colors).map(([k, v]) => (
                 <label key={k} className={`ve-color ${matchClass(k)}`}>
                   <span className="ve-color__label">{k}</span>
-                  <input type="color" value={v} onChange={e => updateColor(k as keyof Theme['colors'], e.target.value)} />
+                  <ColorInput value={v} onChange={v => updateColor(k as keyof Theme['colors'], v)} />
                 </label>
               ))}
             </div>
@@ -164,43 +163,42 @@ export function VisualEditor({ theme, onChange }: Props) {
       <div className={hoverActiveVisible ? '' : 'editor-section--no-match'}>
         <CollapsibleSection title="Hover & active colors" persistKey="hover-active-colors">
           <div className="ve-section">
-            <h4 className="ve-section__title">Hover & active colors</h4>
             <div className="ve-grid">
               <label className={`ve-color ${matchClass('bgHover')}`}>
                 <span className="ve-color__label">bgHover</span>
-                <input type="color" value={theme.colors.bgHover} onChange={e => updateNewColor('bgHover', e.target.value)} />
+                <ColorInput value={theme.colors.bgHover} onChange={v => updateNewColor('bgHover', v)} />
               </label>
               <label className={`ve-color ${matchClass('bgActive')}`}>
                 <span className="ve-color__label">bgActive</span>
-                <input type="color" value={theme.colors.bgActive} onChange={e => updateNewColor('bgActive', e.target.value)} />
+                <ColorInput value={theme.colors.bgActive} onChange={v => updateNewColor('bgActive', v)} />
               </label>
               <label className={`ve-color ${matchClass('textInverse')}`}>
                 <span className="ve-color__label">textInverse</span>
-                <input type="color" value={theme.colors.textInverse} onChange={e => updateNewColor('textInverse', e.target.value)} />
+                <ColorInput value={theme.colors.textInverse} onChange={v => updateNewColor('textInverse', v)} />
               </label>
               <label className={`ve-color ${matchClass('borderStrong')}`}>
                 <span className="ve-color__label">borderStrong</span>
-                <input type="color" value={theme.colors.borderStrong} onChange={e => updateNewColor('borderStrong', e.target.value)} />
+                <ColorInput value={theme.colors.borderStrong} onChange={v => updateNewColor('borderStrong', v)} />
               </label>
               <label className={`ve-color ${matchClass('focusRing')}`}>
                 <span className="ve-color__label">focusRing</span>
-                <input type="color" value={theme.colors.focusRing} onChange={e => updateNewColor('focusRing', e.target.value)} />
+                <ColorInput value={theme.colors.focusRing} onChange={v => updateNewColor('focusRing', v)} />
               </label>
               <label className={`ve-color ${matchClass('info')}`}>
                 <span className="ve-color__label">info</span>
-                <input type="color" value={theme.colors.info} onChange={e => updateNewColor('info', e.target.value)} />
+                <ColorInput value={theme.colors.info} onChange={v => updateNewColor('info', v)} />
               </label>
               <label className={`ve-color ${matchClass('link')}`}>
                 <span className="ve-color__label">link</span>
-                <input type="color" value={theme.colors.link} onChange={e => updateNewColor('link', e.target.value)} />
+                <ColorInput value={theme.colors.link} onChange={v => updateNewColor('link', v)} />
               </label>
               <label className={`ve-color ${matchClass('codeBg')}`}>
                 <span className="ve-color__label">codeBg</span>
-                <input type="color" value={theme.colors.codeBg} onChange={e => updateNewColor('codeBg', e.target.value)} />
+                <ColorInput value={theme.colors.codeBg} onChange={v => updateNewColor('codeBg', v)} />
               </label>
               <label className={`ve-color ${matchClass('overlay')}`}>
                 <span className="ve-color__label">overlay</span>
-                <input type="color" value={theme.colors.overlay} onChange={e => updateNewColor('overlay', e.target.value)} />
+                <ColorInput value={theme.colors.overlay} onChange={v => updateNewColor('overlay', v)} />
               </label>
             </div>
           </div>
@@ -210,7 +208,6 @@ export function VisualEditor({ theme, onChange }: Props) {
       <div className={fontFamiliesVisible ? '' : 'editor-section--no-match'}>
         <CollapsibleSection title="Typography — font families" persistKey="typography-font-families">
           <div className="ve-section">
-            <h4 className="ve-section__title">Typography — font families</h4>
             <div className="ve-stack">
               {(Object.keys(theme.typography.fontFamily) as Array<keyof Theme['typography']['fontFamily']>).map(k => (
                 <div key={k} className="ve-length-row">
@@ -229,7 +226,6 @@ export function VisualEditor({ theme, onChange }: Props) {
       <div className={fontSizesVisible ? '' : 'editor-section--no-match'}>
         <CollapsibleSection title="Typography — sizes" persistKey="typography-sizes">
           <div className="ve-section">
-            <h4 className="ve-section__title">Typography — sizes</h4>
             <div className="ve-stack">
               {(Object.keys(theme.typography.fontSize) as Array<keyof Theme['typography']['fontSize']>).map(k => (
                 <div key={k} className="ve-length-row">
@@ -249,7 +245,6 @@ export function VisualEditor({ theme, onChange }: Props) {
       <div className={fontWeightsVisible ? '' : 'editor-section--no-match'}>
         <CollapsibleSection title="Typography — weights" persistKey="typography-weights">
           <div className="ve-section">
-            <h4 className="ve-section__title">Typography — weights</h4>
             <div className="ve-grid">
               {Object.entries(theme.typography.fontWeight).map(([k, v]) => (
                 <label key={k} className={`ve-field ${matchClass(k)}`}>
@@ -281,7 +276,6 @@ export function VisualEditor({ theme, onChange }: Props) {
       <div className={lineHeightsVisible ? '' : 'editor-section--no-match'}>
         <CollapsibleSection title="Typography — line heights" persistKey="typography-line-heights">
           <div className="ve-section">
-            <h4 className="ve-section__title">Typography — line heights</h4>
             <div className="ve-grid">
               {Object.entries(theme.typography.lineHeight).map(([k, v]) => (
                 <label key={k} className={`ve-field ${matchClass(k)}`}>
@@ -305,7 +299,6 @@ export function VisualEditor({ theme, onChange }: Props) {
       <div className={spacingVisible ? '' : 'editor-section--no-match'}>
         <CollapsibleSection title="Spacing" persistKey="spacing">
           <div className="ve-section">
-            <h4 className="ve-section__title">Spacing</h4>
             <div className="ve-stack">
               {(Object.keys(theme.spacing) as Array<keyof Theme['spacing']>).map(k => (
                 <div key={k} className="ve-length-row">
@@ -325,7 +318,6 @@ export function VisualEditor({ theme, onChange }: Props) {
       <div className={radiusVisible ? '' : 'editor-section--no-match'}>
         <CollapsibleSection title="Radius" persistKey="radius">
           <div className="ve-section">
-            <h4 className="ve-section__title">Radius</h4>
             <div className="ve-stack">
               {(Object.keys(theme.radius) as Array<keyof Theme['radius']>).map(k => (
                 <div key={k} className="ve-length-row">
@@ -345,7 +337,6 @@ export function VisualEditor({ theme, onChange }: Props) {
       <div className={shadowsVisible ? '' : 'editor-section--no-match'}>
         <CollapsibleSection title="Shadows" persistKey="shadows">
           <div className="ve-section">
-            <h4 className="ve-section__title">Shadows</h4>
             <div className="ve-stack">
               {Object.entries(theme.shadows).map(([k, v]) => (
                 <div key={k} className={`ve-shadow-row-wrap ${matchClass(k)}`}>
@@ -362,7 +353,6 @@ export function VisualEditor({ theme, onChange }: Props) {
       <div className={specialShadowsVisible ? '' : 'editor-section--no-match'}>
         <CollapsibleSection title="Special shadows" persistKey="special-shadows">
           <div className="ve-section">
-            <h4 className="ve-section__title">Special shadows</h4>
             <div className="ve-stack">
               {(['button', 'input', 'card', 'focus', 'inner', 'glow'] as Array<keyof Theme['shadows']>).map(k => {
                 const v = theme.shadows[k]
@@ -382,7 +372,6 @@ export function VisualEditor({ theme, onChange }: Props) {
       <div className={bordersVisible ? '' : 'editor-section--no-match'}>
         <CollapsibleSection title="Borders" persistKey="borders">
           <div className="ve-section">
-            <h4 className="ve-section__title">Borders</h4>
             <div className="ve-stack">
               <div className="ve-length-row">
                 <span className="ve-field__label">width</span>
@@ -420,7 +409,6 @@ export function VisualEditor({ theme, onChange }: Props) {
       <div className={transitionsVisible ? '' : 'editor-section--no-match'}>
         <CollapsibleSection title="Transitions" persistKey="transitions">
           <div className="ve-section">
-            <h4 className="ve-section__title">Transitions</h4>
             <div className="ve-stack">
               {Object.entries(theme.transitions).map(([k, v]) => (
                 <label key={k} className={`ve-field ${matchClass(k)}`}>
@@ -436,7 +424,6 @@ export function VisualEditor({ theme, onChange }: Props) {
       <div className={breakpointsVisible ? '' : 'editor-section--no-match'}>
         <CollapsibleSection title="Breakpoints" persistKey="breakpoints">
           <div className="ve-section">
-            <h4 className="ve-section__title">Breakpoints</h4>
             <div className="ve-grid">
               {Object.entries(theme.breakpoints).map(([k, v]) => {
                 // Breakpoints are CSS lengths (e.g. "768px") — re-use LengthInput so they
@@ -464,7 +451,6 @@ export function VisualEditor({ theme, onChange }: Props) {
       <div className={customCssVisible ? '' : 'editor-section--no-match'}>
         <CollapsibleSection title="Custom CSS" persistKey="custom-css">
           <div className="ve-section">
-            <h4 className="ve-section__title">Custom CSS</h4>
             <textarea
               className="field__input ve-textarea"
               rows={8}

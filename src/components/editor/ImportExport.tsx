@@ -89,7 +89,7 @@ export function ImportExport({
         </MenuPanel>
       </Menu>
 
-      <Button variant="ghost" size="sm" onClick={() => onExport(exportFormat, colorFormat)}>Export</Button>
+      <Button variant="ghost" size="sm" onClick={() => onExport(exportFormat, colorFormat)}>Export {formatLabel}</Button>
     </div>
   )
 }

@@ -26,6 +26,9 @@ h3 { font-size: var(--font-size-lg); }
 
 p { margin: 0; }
 
+/* Form controls don't inherit fonts by default — make them follow the theme. */
+button, input, select, textarea { font-family: inherit; }
+
 code, pre {
   font-family: var(--font-mono);
   font-size: var(--font-size-sm);
