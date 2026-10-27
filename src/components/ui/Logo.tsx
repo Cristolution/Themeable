@@ -5,7 +5,7 @@ type Props = {
 
 /**
  * The Token T mark. The pill takes the theme's accent and the stem its text
- * colour, so the logo re-skins with every theme. Paths: brand/logo/kit.
+ * colour, so the logo re-skins with every theme.
  */
 export function Logo({ size = 24, className = '' }: Props) {
   return (

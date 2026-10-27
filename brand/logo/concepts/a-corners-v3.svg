@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="t"><title id="t">Themeable concept A — radius scale</title>
-<path fill="#111" d="M24 24H108A8 8 0 0 1 116 32V108A8 8 0 0 1 108 116H32A8 8 0 0 1 24 108Z"/>
-<path fill="#111" d="M148 24H216A16 16 0 0 1 232 40V108A8 8 0 0 1 224 116H148A8 8 0 0 1 140 108V32A8 8 0 0 1 148 24Z"/>
-<path fill="#111" d="M148 140H224A8 8 0 0 1 232 148V186A46 46 0 0 1 186 232H148A8 8 0 0 1 140 224V148A8 8 0 0 1 148 140Z"/>
-<path fill="#111" d="M32 140H108A8 8 0 0 1 116 148V224A8 8 0 0 1 108 232H54A30 30 0 0 1 24 202V148A8 8 0 0 1 32 140Z"/>
-</svg>

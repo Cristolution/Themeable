@@ -31,9 +31,9 @@ docs/superpowers/
 *.webp
 !public/**/*.png
 !docs/**/*.png
-!brand/**/*.png
 
 # Launch video workspace (rendered output is large)
 brag-output/
+
+# Local logo working files (kept out of the repo)
 brand/
-docs/

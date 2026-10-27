@@ -92,10 +92,6 @@ It's a static single-page app. `npm run build` produces `dist/`, which you can d
 
 Issues and pull requests are welcome, and new presets especially. A preset is a `Theme` object in [src/theme/presets.generated.ts](src/theme/presets.generated.ts). Add it to the `presets` array, and `npm test` checks that it validates and that its name is unique.
 
-## Brand
-
-The Token T logo, colours and usage rules are in [brand/logo](brand/logo/README.md).
-
 ## License
 
 [MIT](LICENSE)
